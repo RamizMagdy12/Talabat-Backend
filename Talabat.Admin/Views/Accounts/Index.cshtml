@@ -1,0 +1,76 @@
+@model AccountsIndexViewModel
+@{
+    ViewData["Title"] = "Users";
+    ViewData["Search"] = Model.Search;
+    ViewData["SearchPlaceholder"] = "Search by name, email, phone...";
+}
+
+<div class="stat-grid">
+    <div class="stat-card brand">
+        <div class="label">Accounts</div>
+        <div class="value">@Model.TotalAccounts</div>
+    </div>
+    <div class="stat-card warn">
+        <div class="label">Orders Today</div>
+        <div class="value">@Model.OrdersToday</div>
+    </div>
+    <div class="stat-card ok">
+        <div class="label">Orders This Month</div>
+        <div class="value">@Model.OrdersThisMonth</div>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-header">
+        <h2>All Accounts</h2>
+        <partial name="_SearchBar" />
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Roles</th>
+                    <th>Today</th>
+                    <th>This Month</th>
+                    <th>Total Orders</th>
+                </tr>
+            </thead>
+            <tbody>
+            @if (!Model.Accounts.Any())
+            {
+                <tr><td colspan="7" class="text-muted">No accounts found.</td></tr>
+            }
+            else
+            {
+                foreach (var account in Model.Accounts)
+                {
+                    <tr>
+                        <td>@account.DisplayName</td>
+                        <td>@account.Email</td>
+                        <td>@(account.PhoneNumber ?? "-")</td>
+                        <td>
+                            @if (account.Roles.Any())
+                            {
+                                foreach (var role in account.Roles)
+                                {
+                                    <span class="badge-status badge-paid">@role</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-muted">Customer</span>
+                            }
+                        </td>
+                        <td>@account.OrdersToday</td>
+                        <td>@account.OrdersThisMonth</td>
+                        <td><strong>@account.TotalOrders</strong></td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

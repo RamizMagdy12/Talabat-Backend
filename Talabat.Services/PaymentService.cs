@@ -64,7 +64,25 @@ namespace Talabat.Services
 			var paymentIntentService = new PaymentIntentService();
 			PaymentIntent paymentIntent;
 
-			if (string.IsNullOrEmpty(basket.PaymentIntentId))
+			var canReuseExistingIntent = false;
+			if (!string.IsNullOrEmpty(basket.PaymentIntentId))
+			{
+				try
+				{
+					var existing = await paymentIntentService.GetAsync(basket.PaymentIntentId);
+					// Only update intents that can still accept payment
+					canReuseExistingIntent = existing.Status is "requires_payment_method"
+						or "requires_confirmation"
+						or "requires_action";
+				}
+				catch (StripeException ex)
+				{
+					_logger.LogWarning(ex, "Existing PaymentIntent {Id} could not be loaded; creating a new one", basket.PaymentIntentId);
+					canReuseExistingIntent = false;
+				}
+			}
+
+			if (!canReuseExistingIntent)
 			{
 				var option = new PaymentIntentCreateOptions()
 				{

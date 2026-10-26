@@ -46,6 +46,15 @@ namespace Talabat.Core.ProductSpec
 		{
 			AddIncludes();
 		}
+
+		/// <summary>Admin: all products with brand/category, no pagination.</summary>
+		public ProductWithBrandAndCategorySpecifications() : base()
+		{
+			criteria = null!;
+			AddIncludes();
+			AddOrderBy(p => p.Name);
+		}
+
 		// helper
 		private void AddIncludes()
 		{

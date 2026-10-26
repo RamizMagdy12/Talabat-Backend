@@ -1,0 +1,147 @@
+@model FinanceViewModel
+@{
+    ViewData["Title"] = "Finance";
+    ViewData["Search"] = Model.Search;
+    ViewData["SearchPlaceholder"] = "Search orders by id, email, status...";
+}
+
+<div class="stat-grid">
+    <div class="stat-card ok">
+        <div class="label">Revenue Today</div>
+        <div class="value money">@Model.RevenueToday.ToString("C")</div>
+    </div>
+    <div class="stat-card brand">
+        <div class="label">Revenue This Month</div>
+        <div class="value money">@Model.RevenueThisMonth.ToString("C")</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Revenue All Time</div>
+        <div class="value money">@Model.RevenueAllTime.ToString("C")</div>
+    </div>
+    <div class="stat-card warn">
+        <div class="label">Paid Orders</div>
+        <div class="value">@Model.PaidOrdersCount</div>
+    </div>
+</div>
+
+<div class="stat-grid">
+    <div class="stat-card danger">
+        <div class="label">Pending Payment (@Model.PendingOrdersCount)</div>
+        <div class="value money">@Model.PendingAmount.ToString("C")</div>
+    </div>
+    <div class="stat-card danger">
+        <div class="label">Failed Payments (@Model.FailedOrdersCount)</div>
+        <div class="value money">@Model.FailedAmount.ToString("C")</div>
+    </div>
+    <div class="stat-card brand">
+        <div class="label">In Preparing</div>
+        <div class="value money">@Model.PreparingAmount.ToString("C")</div>
+    </div>
+    <div class="stat-card ok">
+        <div class="label">Delivered Value</div>
+        <div class="value money">@Model.DeliveredAmount.ToString("C")</div>
+    </div>
+</div>
+
+<div class="panel mb-3">
+    <div class="panel-header">
+        <h2>Money by Stage</h2>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Stage</th>
+                    <th>Amount</th>
+                    <th>Counts as revenue?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge-status badge-pending">Pending</span></td>
+                    <td>@Model.PendingAmount.ToString("C")</td>
+                    <td class="text-muted">No</td>
+                </tr>
+                <tr>
+                    <td><span class="badge-status badge-failed">Payment Failed</span></td>
+                    <td>@Model.FailedAmount.ToString("C")</td>
+                    <td class="text-muted">No</td>
+                </tr>
+                <tr>
+                    <td><span class="badge-status badge-prep">Preparing</span></td>
+                    <td>@Model.PreparingAmount.ToString("C")</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td><span class="badge-status badge-ship">Out For Delivery</span></td>
+                    <td>@Model.OutForDeliveryAmount.ToString("C")</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td><span class="badge-status badge-delivered">Delivered</span></td>
+                    <td>@Model.DeliveredAmount.ToString("C")</td>
+                    <td>Yes</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p class="text-muted mt-3 mb-0" style="font-size:.85rem">
+        Revenue includes orders with status Payment Received, Preparing, Out For Delivery, or Delivered.
+    </p>
+</div>
+
+<div class="panel">
+    <div class="panel-header">
+        <h2>Order Money Log</h2>
+        <partial name="_SearchBar" />
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Buyer</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Revenue</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @if (!Model.RecentOrders.Any())
+            {
+                <tr><td colspan="7" class="text-muted">No orders found.</td></tr>
+            }
+            else
+            {
+                foreach (var order in Model.RecentOrders)
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>@order.BuyerEmail</td>
+                        <td>@order.OrderDate.ToLocalTime().ToString("g")</td>
+                        <td>
+                            <span class="badge-status @OrderStatusHelper.BadgeClass(order.Status)">
+                                @OrderStatusHelper.DisplayName(order.Status)
+                            </span>
+                        </td>
+                        <td><strong>@order.Total.ToString("C")</strong></td>
+                        <td>
+                            @if (order.CountsAsRevenue)
+                            {
+                                <span class="badge-status badge-paid">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="badge-status badge-pending">No</span>
+                            }
+                        </td>
+                        <td><a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">Details</a></td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

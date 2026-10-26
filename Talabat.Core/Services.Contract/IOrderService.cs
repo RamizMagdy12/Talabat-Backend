@@ -13,5 +13,8 @@ namespace Talabat.Core.Services.Contract
         Task<IReadOnlyList<Order>> GetOrderForUserAsync(string buyerEmail);
         Task<Order?> GetOrderByIdForUserAsync(int OrderId , string buyerEmail);
         Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync();
+        Task<IReadOnlyList<Order>> GetAllOrdersAsync();
+        Task<Order?> GetOrderByIdAsync(int orderId);
+        Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus status);
     }
 }

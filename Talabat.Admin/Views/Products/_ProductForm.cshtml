@@ -1,0 +1,72 @@
+@model ProductFormViewModel
+@{
+    var apiBase = (Configuration["ApiBaseUrl"] ?? "").TrimEnd('/');
+    var previewUrl = string.IsNullOrWhiteSpace(Model.PictureUrl)
+        ? null
+        : (Model.PictureUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+            ? Model.PictureUrl
+            : $"{apiBase}/{Model.PictureUrl.TrimStart('/')}");
+}
+
+<div class="row g-3">
+    <div class="col-md-8">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Stock" class="form-label"></label>
+        <input asp-for="Stock" class="form-control" />
+        <span asp-validation-for="Stock" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="BrandId" class="form-label"></label>
+        <select asp-for="BrandId" asp-items="Model.Brands" class="form-select">
+            <option value="">Select brand</option>
+        </select>
+        <span asp-validation-for="BrandId" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="CategoryId" class="form-label"></label>
+        <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select">
+            <option value="">Select category</option>
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="ImageFile" class="form-label"></label>
+        <input asp-for="ImageFile" type="file" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif" id="imageFileInput" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
+        <input type="hidden" asp-for="PictureUrl" />
+        <div class="image-preview-wrap mt-3 @(previewUrl == null ? "d-none" : "")" id="imagePreviewWrap">
+            <img src="@previewUrl" alt="Product preview" id="imagePreview" class="image-preview" />
+        </div>
+        <div class="form-text">JPG, PNG, WEBP, or GIF — max 10 MB. On edit, leave empty to keep the current image.</div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const input = document.getElementById('imageFileInput');
+        const wrap = document.getElementById('imagePreviewWrap');
+        const img = document.getElementById('imagePreview');
+        if (!input || !wrap || !img) return;
+        input.addEventListener('change', function () {
+            const file = input.files && input.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+            img.src = url;
+            wrap.classList.remove('d-none');
+        });
+    })();
+</script>

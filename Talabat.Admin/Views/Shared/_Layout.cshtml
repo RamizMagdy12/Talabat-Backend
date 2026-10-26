@@ -1,0 +1,77 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Talabat Admin</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+</head>
+<body>
+@{
+    var isAuth = User?.Identity?.IsAuthenticated == true;
+    var path = Context.Request.Path.Value ?? "";
+}
+@if (isAuth)
+{
+    <div class="admin-shell">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-mark">T</span>
+                <div>
+                    <strong>Talabat Admin</strong>
+                    <small>Inventory & Orders</small>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a class="nav-link @(path.StartsWith("/Dashboard") || path == "/" ? "active" : "")" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                <a class="nav-link @(path.StartsWith("/Products") ? "active" : "")" asp-controller="Products" asp-action="Index">Products</a>
+                <a class="nav-link @(path.StartsWith("/Brands") ? "active" : "")" asp-controller="Brands" asp-action="Index">Brands</a>
+                <a class="nav-link @(path.StartsWith("/Categories") ? "active" : "")" asp-controller="Categories" asp-action="Index">Categories</a>
+                <a class="nav-link @(path.StartsWith("/Orders") ? "active" : "")" asp-controller="Orders" asp-action="Index">Orders</a>
+                <a class="nav-link @(path.StartsWith("/Accounts") ? "active" : "")" asp-controller="Accounts" asp-action="Index">Users</a>
+                <a class="nav-link @(path.StartsWith("/Finance") ? "active" : "")" asp-controller="Finance" asp-action="Index">Finance</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-chip">@User.FindFirstValue(ClaimTypes.Email)</div>
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-light btn-sm w-100">Logout</button>
+                </form>
+            </div>
+        </aside>
+        <main class="main-panel">
+            <header class="topbar">
+                <div>
+                    <h1>@ViewData["Title"]</h1>
+                    <p class="text-muted mb-0">@DateTime.Now.ToString("dddd, dd MMMM yyyy")</p>
+                </div>
+            </header>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+
+            <div class="content-wrap">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+}
+else
+{
+    <main class="auth-wrap">
+        @RenderBody()
+    </main>
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
