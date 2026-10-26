@@ -41,11 +41,18 @@ namespace Talabat.Services
 			// Get Basket From BasketRepo
 			var basket = await _basketRepository.GetBasketAsync(basketId);
 			if (basket == null) return null;
-			//Get SelectedItems at basket From ProductRepo
+			//Get SelectedItems at basket From ProductRepo + validate/deduct stock
 			var orderItems = new List<OrderItem>();
+			var productRepo = _unitOfWork.Repository<Product>();
 			if (basket?.Items?.Count > 0) {
 				foreach (var item in basket.Items) {
-				  var product = await _unitOfWork.Repository<Product>().GetAsync(item.Id);
+				  var product = await productRepo.GetAsync(item.Id);
+				  if (product == null) return null;
+				  if (product.Stock < item.Quantity) return null;
+
+				  product.Stock -= item.Quantity;
+				  productRepo.Update(product);
+
 				  var productItemOrdered = new ProductItemOrdered(item.Id, product.Name, product.PictureUrl);
 				  var orderItem = new OrderItem(productItemOrdered, product.Price, item.Quantity);
 				  orderItems.Add(orderItem);
@@ -103,5 +110,30 @@ namespace Talabat.Services
 
 		public async Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()
 		 => await _unitOfWork.Repository<DeliveryMethod>().GetAllAsync();
+
+		public async Task<IReadOnlyList<Order>> GetAllOrdersAsync()
+		{
+			var orderRepo = _unitOfWork.Repository<Order>();
+			var spec = new OrderSpecifications();
+			return await orderRepo.GetAllWithSpecAsync(spec);
+		}
+
+		public Task<Order?> GetOrderByIdAsync(int orderId)
+		{
+			var orderRepo = _unitOfWork.Repository<Order>();
+			var spec = new OrderSpecifications(orderId);
+			return orderRepo.GetEntityWithSpecAsync(spec);
+		}
+
+		public async Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus status)
+		{
+			var orderRepo = _unitOfWork.Repository<Order>();
+			var order = await orderRepo.GetAsync(orderId);
+			if (order == null) return false;
+
+			order.Status = status;
+			orderRepo.Update(order);
+			return await _unitOfWork.CompleteAsync() > 0;
+		}
 	}
 }

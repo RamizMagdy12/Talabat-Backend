@@ -1,0 +1,42 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Admin Login";
+    Layout = "_Layout";
+}
+
+<div class="login-stage">
+    <div class="login-orb login-orb-a"></div>
+    <div class="login-orb login-orb-b"></div>
+    <div class="login-orb login-orb-c"></div>
+    <div class="login-grid"></div>
+
+    <div class="login-card">
+        <h1>Talabat Admin</h1>
+        <p class="subtitle">Sign in to manage inventory and orders.</p>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <form asp-action="Login" method="post">
+            <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" autocomplete="username" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-check mb-3">
+                <input asp-for="RememberMe" class="form-check-input" />
+                <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+            </div>
+            <button type="submit" class="btn btn-brand w-100">Sign in</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

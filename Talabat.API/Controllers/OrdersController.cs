@@ -31,7 +31,7 @@ namespace Talabat.API.Controllers
 
 			var address = _mapper.Map<AddressDto, Address>(orderDto.ShippingAddress);
 			var order = await _orderService.CreateOrderAsync(buyerEmail.Trim(), orderDto.BasketId, orderDto.DeliveryMethod, address);
-			if (order == null) return BadRequest(new ApiResponse(400));
+			if (order == null) return BadRequest(new ApiResponse(400, "Unable to create order. Check stock availability and basket."));
 
 			var mapped = _mapper.Map<Order, OrderToReturnDto>(order);
 			return Ok(mapped);

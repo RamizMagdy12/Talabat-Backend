@@ -1,0 +1,95 @@
+@using Talabat.Admin.Helpers
+@model Order
+@{
+    ViewData["Title"] = $"Order #{Model.Id}";
+}
+
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Items</h2>
+                <span class="badge-status @OrderStatusHelper.BadgeClass(Model.Status)">
+                    @OrderStatusHelper.DisplayName(Model.Status)
+                </span>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Line</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>@item.Product?.ProductName</td>
+                            <td>@item.Price.ToString("C")</td>
+                            <td>@item.Quantity</td>
+                            <td>@((item.Price * item.Quantity).ToString("C"))</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="panel mb-3">
+            <div class="panel-header"><h2>Summary</h2></div>
+            <dl class="mb-0">
+                <dt>Buyer</dt>
+                <dd>@Model.BuyerEmail</dd>
+                <dt>Date</dt>
+                <dd>@Model.OrderDate.ToLocalTime().ToString("f")</dd>
+                <dt>Delivery</dt>
+                <dd>@(Model.DeliveryMethod?.ShortName ?? "-") (@(Model.DeliveryMethod?.Cost.ToString("C") ?? "-"))</dd>
+                <dt>Subtotal</dt>
+                <dd>@Model.Subtotal.ToString("C")</dd>
+                <dt>Total</dt>
+                <dd><strong>@(Model.DeliveryMethod != null ? Model.GetTotal().ToString("C") : Model.Subtotal.ToString("C"))</strong></dd>
+                <dt>Payment Intent</dt>
+                <dd class="text-break">@(string.IsNullOrWhiteSpace(Model.PaymentIntentId) ? "-" : Model.PaymentIntentId)</dd>
+            </dl>
+            @if (Model.ShippingAddress != null)
+            {
+                <hr />
+                <h3 class="h6">Shipping</h3>
+                <p class="mb-0">
+                    @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName<br />
+                    @Model.ShippingAddress.Street<br />
+                    @Model.ShippingAddress.City, @Model.ShippingAddress.Country
+                </p>
+            }
+        </div>
+
+        <div class="panel">
+            <div class="panel-header"><h2>Update Status</h2></div>
+            <p class="text-muted" style="font-size:.85rem">Customer sees this status live in their orders page.</p>
+            <form asp-action="UpdateStatus" method="post">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <div class="mb-3">
+                    <select name="status" class="form-select">
+                        @foreach (OrderStatus st in Enum.GetValues(typeof(OrderStatus)))
+                        {
+                            if (Model.Status == st)
+                            {
+                                <option value="@st" selected>@OrderStatusHelper.DisplayName(st)</option>
+                            }
+                            else
+                            {
+                                <option value="@st">@OrderStatusHelper.DisplayName(st)</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-brand w-100">Save status</button>
+            </form>
+            <a class="btn btn-outline-secondary w-100 mt-2" asp-action="Index">Back to orders</a>
+        </div>
+    </div>
+</div>

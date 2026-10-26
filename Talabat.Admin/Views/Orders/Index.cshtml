@@ -1,0 +1,78 @@
+@using Talabat.Admin.Helpers
+@model IReadOnlyList<Order>
+@{
+    ViewData["Title"] = "Orders";
+    ViewData["Search"] = ViewBag.Search as string;
+    ViewData["SearchPlaceholder"] = "Search by id, email, status...";
+    var selectedStatus = ViewBag.Status as OrderStatus?;
+}
+
+<div class="panel">
+    <div class="panel-header">
+        <h2>All Orders</h2>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <form method="get" class="search-bar">
+                <input type="search" name="q" value="@ViewBag.Search" class="form-control" placeholder="Search by id, email, status..." />
+                <select name="status" class="form-select" style="min-width:180px">
+                    <option value="">All statuses</option>
+                    @foreach (OrderStatus st in Enum.GetValues(typeof(OrderStatus)))
+                    {
+                        if (selectedStatus == st)
+                        {
+                            <option value="@st" selected>@OrderStatusHelper.DisplayName(st)</option>
+                        }
+                        else
+                        {
+                            <option value="@st">@OrderStatusHelper.DisplayName(st)</option>
+                        }
+                    }
+                </select>
+                <button type="submit" class="btn btn-brand">Search</button>
+                @if (!string.IsNullOrWhiteSpace(ViewBag.Search as string) || selectedStatus.HasValue)
+                {
+                    <a class="btn btn-outline-secondary" asp-action="Index">Clear</a>
+                }
+            </form>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Buyer</th>
+                    <th>Date</th>
+                    <th>Items</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @if (!Model.Any())
+            {
+                <tr><td colspan="7" class="text-muted">No orders found.</td></tr>
+            }
+            else
+            {
+                foreach (var order in Model)
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>@order.BuyerEmail</td>
+                        <td>@order.OrderDate.ToLocalTime().ToString("g")</td>
+                        <td>@order.Items?.Count</td>
+                        <td>
+                            <span class="badge-status @OrderStatusHelper.BadgeClass(order.Status)">
+                                @OrderStatusHelper.DisplayName(order.Status)
+                            </span>
+                        </td>
+                        <td>@(order.DeliveryMethod != null ? order.GetTotal().ToString("C") : order.Subtotal.ToString("C"))</td>
+                        <td><a asp-action="Details" asp-route-id="@order.Id">Details</a></td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

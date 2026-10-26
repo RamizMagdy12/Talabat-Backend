@@ -61,6 +61,15 @@ namespace Talabat.Repository.Data
                     await storeContext.SaveChangesAsync();
                 }
             }
+
+            // Backfill Stock for existing products that still have 0 after migration
+            var productsWithoutStock = storeContext.products.Where(p => p.Stock <= 0).ToList();
+            if (productsWithoutStock.Count > 0)
+            {
+                foreach (var product in productsWithoutStock)
+                    product.Stock = 50;
+                await storeContext.SaveChangesAsync();
+            }
         }
     }
 }

@@ -1,0 +1,95 @@
+@using Talabat.Admin.Helpers
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="stat-grid">
+    <div class="stat-card brand">
+        <div class="label">Products</div>
+        <div class="value">@Model.TotalProducts</div>
+    </div>
+    <div class="stat-card warn">
+        <div class="label">Low Stock (≤10)</div>
+        <div class="value">@Model.LowStockCount</div>
+    </div>
+    <div class="stat-card danger">
+        <div class="label">Orders Today</div>
+        <div class="value">@Model.OrdersToday</div>
+    </div>
+    <div class="stat-card ok">
+        <div class="label">Orders This Month</div>
+        <div class="value">@Model.OrdersThisMonth</div>
+    </div>
+</div>
+
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="label">Pending</div>
+        <div class="value">@Model.PendingOrders</div>
+    </div>
+    <div class="stat-card brand">
+        <div class="label">Paid</div>
+        <div class="value">@Model.PaidOrders</div>
+    </div>
+    <div class="stat-card warn">
+        <div class="label">Preparing</div>
+        <div class="value">@Model.PreparingOrders</div>
+    </div>
+    <div class="stat-card danger">
+        <div class="label">Out For Delivery</div>
+        <div class="value">@Model.OutForDeliveryOrders</div>
+    </div>
+</div>
+
+<div class="stat-grid" style="grid-template-columns: repeat(1, minmax(0, 220px)); margin-top: -0.5rem;">
+    <div class="stat-card ok">
+        <div class="label">Delivered</div>
+        <div class="value">@Model.DeliveredOrders</div>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-header">
+        <h2>Recent Orders</h2>
+        <a class="btn btn-sm btn-outline-primary" asp-controller="Orders" asp-action="Index">View all</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Buyer</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @if (!Model.RecentOrders.Any())
+            {
+                <tr><td colspan="6" class="text-muted">No orders yet.</td></tr>
+            }
+            else
+            {
+                foreach (var order in Model.RecentOrders)
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>@order.BuyerEmail</td>
+                        <td>@order.OrderDate.ToLocalTime().ToString("g")</td>
+                        <td>
+                            <span class="badge-status @OrderStatusHelper.BadgeClass(order.Status)">
+                                @OrderStatusHelper.DisplayName(order.Status)
+                            </span>
+                        </td>
+                        <td>@order.GetTotal().ToString("C")</td>
+                        <td><a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">Details</a></td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

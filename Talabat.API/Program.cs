@@ -27,12 +27,19 @@ namespace Talabat.API
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddDbContext<StoreContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
+                options.UseSqlServer(
+             builder.Configuration.GetConnectionString("DefaultConnection"),
+             sqlOptions => sqlOptions.EnableRetryOnFailure());
+
+
+			});
             builder.Services.AddDbContext<AppIdentityContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
-            });
+				options.UseSqlServer(
+	 builder.Configuration.GetConnectionString("IdentityConnection"),
+	 sqlOptions => sqlOptions.EnableRetryOnFailure()
+ );
+			});
             // Redis
             builder.Services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
             {
