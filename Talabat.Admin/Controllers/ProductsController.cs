@@ -77,7 +77,7 @@ namespace Talabat.Admin.Controllers
 				Description = model.Description,
 				PictureUrl = pictureUrl,
 				Price = model.Price,
-				Stock = model.Stock,
+				Stock = Math.Max(0, model.Stock),
 				IsActive = model.IsActive,
 				BrandId = model.BrandId,
 				categoryId = model.CategoryId
@@ -85,6 +85,22 @@ namespace Talabat.Admin.Controllers
 
 			await _unitOfWork.Repository<Product>().AddAsync(product);
 			await _unitOfWork.CompleteAsync();
+
+			if (product.Stock > 0)
+			{
+				await _unitOfWork.Repository<StockMovement>().AddAsync(new StockMovement
+				{
+					ProductId = product.Id,
+					Type = StockMovementType.StockIn,
+					Quantity = product.Stock,
+					StockAfter = product.Stock,
+					OccurredAtUtc = DateTime.UtcNow,
+					Note = "Initial stock on create",
+					CreatedDateTime = DateTime.UtcNow
+				});
+				await _unitOfWork.CompleteAsync();
+			}
+
 			TempData["Success"] = "Product created.";
 			return RedirectToAction(nameof(Index));
 		}
@@ -134,15 +150,36 @@ namespace Talabat.Admin.Controllers
 				product.PictureUrl = pictureUrl;
 			}
 
+			var previousStock = product.Stock;
+			var nextStock = Math.Max(0, model.Stock);
+
 			product.Name = model.Name;
 			product.Description = model.Description;
 			product.Price = model.Price;
-			product.Stock = model.Stock;
+			product.Stock = nextStock;
 			product.IsActive = model.IsActive;
 			product.BrandId = model.BrandId;
 			product.categoryId = model.CategoryId;
 
 			_unitOfWork.Repository<Product>().Update(product);
+
+			var delta = nextStock - previousStock;
+			if (delta != 0)
+			{
+				await _unitOfWork.Repository<StockMovement>().AddAsync(new StockMovement
+				{
+					ProductId = product.Id,
+					Type = delta > 0 ? StockMovementType.StockIn : StockMovementType.Adjustment,
+					Quantity = Math.Abs(delta),
+					StockAfter = nextStock,
+					OccurredAtUtc = DateTime.UtcNow,
+					Note = delta > 0
+						? $"Stock added (+{delta})"
+						: $"Stock adjusted ({delta})",
+					CreatedDateTime = DateTime.UtcNow
+				});
+			}
+
 			await _unitOfWork.CompleteAsync();
 			TempData["Success"] = "Product updated.";
 			return RedirectToAction(nameof(Index));

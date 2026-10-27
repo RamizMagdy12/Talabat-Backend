@@ -36,6 +36,7 @@
             <nav class="sidebar-nav">
                 <a class="nav-link @(path.StartsWith("/Dashboard") || path == "/" ? "active" : "")" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                 <a class="nav-link @(path.StartsWith("/Products") ? "active" : "")" asp-controller="Products" asp-action="Index">Products</a>
+                <a class="nav-link @(path.StartsWith("/Inventory") ? "active" : "")" asp-controller="Inventory" asp-action="Index">Inventory</a>
                 <a class="nav-link @(path.StartsWith("/Brands") ? "active" : "")" asp-controller="Brands" asp-action="Index">Brands</a>
                 <a class="nav-link @(path.StartsWith("/Categories") ? "active" : "")" asp-controller="Categories" asp-action="Index">Categories</a>
                 <a class="nav-link @(path.StartsWith("/Orders") ? "active" : "")" asp-controller="Orders" asp-action="Index">Orders</a>

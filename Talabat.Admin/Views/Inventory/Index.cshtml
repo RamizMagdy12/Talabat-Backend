@@ -1,0 +1,97 @@
+@model InventoryIndexViewModel
+@{
+    ViewData["Title"] = "Inventory";
+    ViewData["Search"] = Model.Search;
+    ViewData["SearchPlaceholder"] = "Search product or brand...";
+}
+
+<div class="stat-grid">
+    <div class="stat-card brand">
+        <div class="label">Products</div>
+        <div class="value">@Model.TotalSkus</div>
+    </div>
+    <div class="stat-card ok">
+        <div class="label">Units remaining</div>
+        <div class="value">@Model.UnitsRemaining</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Units added</div>
+        <div class="value">@Model.UnitsAdded</div>
+    </div>
+    <div class="stat-card warn">
+        <div class="label">Units sold</div>
+        <div class="value">@Model.UnitsSold</div>
+    </div>
+    <div class="stat-card danger">
+        <div class="label">Low stock (≤10)</div>
+        <div class="value">@Model.LowStockCount</div>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-header">
+        <h2>Stock ledger</h2>
+        <span class="text-muted" style="font-size:.85rem">Added / sold / remaining per product</span>
+    </div>
+    <partial name="_SearchBar" />
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Added</th>
+                    <th>Last in</th>
+                    <th>Sold</th>
+                    <th>Last sold</th>
+                    <th>Remaining</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @if (!Model.Products.Any())
+            {
+                <tr><td colspan="7" class="text-muted py-4 text-center">No products found.</td></tr>
+            }
+            else
+            {
+                foreach (var row in Model.Products)
+                {
+                    <tr>
+                        <td>
+                            <strong>@row.Name</strong>
+                            <div class="text-muted" style="font-size:.8rem">
+                                #@row.ProductId
+                                @if (!string.IsNullOrWhiteSpace(row.Brand))
+                                {
+                                    <span>· @row.Brand</span>
+                                }
+                                @if (!row.IsActive)
+                                {
+                                    <span class="badge-status badge-failed">Hidden</span>
+                                }
+                            </div>
+                        </td>
+                        <td><strong>@row.TotalAdded</strong></td>
+                        <td class="text-muted">@(row.LastInAtUtc?.ToLocalTime().ToString("g") ?? "—")</td>
+                        <td><strong>@row.TotalSold</strong></td>
+                        <td class="text-muted">@(row.LastSoldAtUtc?.ToLocalTime().ToString("g") ?? "—")</td>
+                        <td>
+                            @if (row.Remaining <= 10)
+                            {
+                                <span class="badge-status badge-low">@row.Remaining</span>
+                            }
+                            else
+                            {
+                                @row.Remaining
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a class="table-link" asp-action="Details" asp-route-id="@row.ProductId">History</a>
+                        </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

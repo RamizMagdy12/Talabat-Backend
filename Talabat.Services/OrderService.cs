@@ -85,6 +85,27 @@ namespace Talabat.Services
 			var result = await _unitOfWork.CompleteAsync();
 			if (result <= 0) return null;
 
+			var movementRepo = _unitOfWork.Repository<StockMovement>();
+			foreach (var item in order.Items)
+			{
+				var productId = item.Product?.ProductId ?? 0;
+				if (productId <= 0) continue;
+
+				var product = await productRepo.GetAsync(productId);
+				await movementRepo.AddAsync(new StockMovement
+				{
+					ProductId = productId,
+					Type = StockMovementType.Sale,
+					Quantity = item.Quantity,
+					StockAfter = product?.Stock ?? 0,
+					OccurredAtUtc = DateTime.UtcNow,
+					OrderId = order.Id,
+					Note = $"Sold on order #{order.Id}",
+					CreatedDateTime = DateTime.UtcNow
+				});
+			}
+
+			await _unitOfWork.CompleteAsync();
 			return order;
 
 		}

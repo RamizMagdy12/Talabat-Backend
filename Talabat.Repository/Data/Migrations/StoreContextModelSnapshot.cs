@@ -264,6 +264,69 @@ namespace Talabat.Repository.Data.Migrations
                     b.ToTable("products");
                 });
 
+            modelBuilder.Entity("Talabat.Core.Entities.StockMovement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedByName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedById")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedByName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("OccurredAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StockAfter")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OccurredAtUtc");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("StockMovements", (string)null);
+                });
+
             modelBuilder.Entity("Talabat.Core.Entities.ProductBrand", b =>
                 {
                     b.Property<int>("Id")
@@ -448,6 +511,17 @@ namespace Talabat.Repository.Data.Migrations
                     b.Navigation("ProductBrand");
 
                     b.Navigation("productCategory");
+                });
+
+            modelBuilder.Entity("Talabat.Core.Entities.StockMovement", b =>
+                {
+                    b.HasOne("Talabat.Core.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Talabat.Core.Entities.Order_Aggregate.Order", b =>

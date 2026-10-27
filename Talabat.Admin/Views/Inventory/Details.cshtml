@@ -1,0 +1,99 @@
+@model InventoryDetailsViewModel
+@{
+    ViewData["Title"] = $"Inventory · {Model.Name}";
+}
+
+<div class="stat-grid">
+    <div class="stat-card ok">
+        <div class="label">Remaining</div>
+        <div class="value">@Model.Remaining</div>
+    </div>
+    <div class="stat-card brand">
+        <div class="label">Total added</div>
+        <div class="value">@Model.TotalAdded</div>
+    </div>
+    <div class="stat-card warn">
+        <div class="label">Total sold</div>
+        <div class="value">@Model.TotalSold</div>
+    </div>
+    <div class="stat-card danger">
+        <div class="label">Adjusted out</div>
+        <div class="value">@Model.TotalAdjustedOut</div>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>@Model.Name</h2>
+            <p class="text-muted mb-0" style="font-size:.85rem">
+                #@Model.ProductId
+                @if (!string.IsNullOrWhiteSpace(Model.Brand))
+                {
+                    <span>· @Model.Brand</span>
+                }
+            </p>
+        </div>
+        <a class="btn btn-outline-secondary btn-sm" asp-action="Index">Back to inventory</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>When</th>
+                    <th>Type</th>
+                    <th>Qty</th>
+                    <th>Stock after</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+            @if (!Model.Movements.Any())
+            {
+                <tr><td colspan="5" class="text-muted py-4 text-center">No stock movements yet.</td></tr>
+            }
+            else
+            {
+                foreach (var m in Model.Movements)
+                {
+                    <tr>
+                        <td>@m.OccurredAtUtc.ToLocalTime().ToString("f")</td>
+                        <td>
+                            @if (m.Type == StockMovementType.StockIn)
+                            {
+                                <span class="badge-status badge-paid">@m.TypeLabel</span>
+                            }
+                            else if (m.Type == StockMovementType.Sale)
+                            {
+                                <span class="badge-status badge-ship">@m.TypeLabel</span>
+                            }
+                            else
+                            {
+                                <span class="badge-status badge-pending">@m.TypeLabel</span>
+                            }
+                        </td>
+                        <td>
+                            @if (m.Type == StockMovementType.StockIn)
+                            {
+                                <strong class="text-success">+@m.Quantity</strong>
+                            }
+                            else
+                            {
+                                <strong class="text-danger">-@m.Quantity</strong>
+                            }
+                        </td>
+                        <td>@m.StockAfter</td>
+                        <td>
+                            @m.Note
+                            @if (m.OrderId.HasValue)
+                            {
+                                <a class="table-link" asp-controller="Orders" asp-action="Details" asp-route-id="@m.OrderId">Order #@m.OrderId</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
