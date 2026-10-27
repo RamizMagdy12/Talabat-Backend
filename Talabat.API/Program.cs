@@ -47,7 +47,9 @@ namespace Talabat.API
                 return ConnectionMultiplexer.Connect(connection);
             });
 
-            builder.Services.AddIdentity<AppUser,IdentityRole>().AddEntityFrameworkStores<AppIdentityContext>();
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+				.AddEntityFrameworkStores<AppIdentityContext>()
+				.AddDefaultTokenProviders();
 
             builder.Services.AddAuthentication(options =>
             {
