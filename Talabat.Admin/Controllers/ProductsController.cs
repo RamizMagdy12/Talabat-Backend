@@ -73,8 +73,10 @@ namespace Talabat.Admin.Controllers
 
 			var product = new Product
 			{
-				Name = model.Name,
-				Description = model.Description,
+				Name = model.Name.Trim(),
+				NameAr = string.IsNullOrWhiteSpace(model.NameAr) ? null : model.NameAr.Trim(),
+				Description = model.Description.Trim(),
+				DescriptionAr = string.IsNullOrWhiteSpace(model.DescriptionAr) ? null : model.DescriptionAr.Trim(),
 				PictureUrl = pictureUrl,
 				Price = model.Price,
 				Stock = Math.Max(0, model.Stock),
@@ -115,7 +117,9 @@ namespace Talabat.Admin.Controllers
 			{
 				Id = product.Id,
 				Name = product.Name,
+				NameAr = product.NameAr,
 				Description = product.Description,
+				DescriptionAr = product.DescriptionAr,
 				PictureUrl = product.PictureUrl,
 				Price = product.Price,
 				Stock = product.Stock,
@@ -153,8 +157,10 @@ namespace Talabat.Admin.Controllers
 			var previousStock = product.Stock;
 			var nextStock = Math.Max(0, model.Stock);
 
-			product.Name = model.Name;
-			product.Description = model.Description;
+			product.Name = model.Name.Trim();
+			product.NameAr = string.IsNullOrWhiteSpace(model.NameAr) ? null : model.NameAr.Trim();
+			product.Description = model.Description.Trim();
+			product.DescriptionAr = string.IsNullOrWhiteSpace(model.DescriptionAr) ? null : model.DescriptionAr.Trim();
 			product.Price = model.Price;
 			product.Stock = nextStock;
 			product.IsActive = model.IsActive;
@@ -219,8 +225,14 @@ namespace Talabat.Admin.Controllers
 			var brands = await _unitOfWork.Repository<ProductBrand>().GetAllAsync();
 			var categories = await _unitOfWork.Repository<ProductCategory>().GetAllAsync();
 
-			model.Brands = brands.Select(b => new SelectListItem(b.Name, b.Id.ToString(), b.Id == model.BrandId));
-			model.Categories = categories.Select(c => new SelectListItem(c.Name, c.Id.ToString(), c.Id == model.CategoryId));
+			model.Brands = brands.Select(b => new SelectListItem(
+				string.IsNullOrWhiteSpace(b.NameAr) ? b.Name : $"{b.Name} / {b.NameAr}",
+				b.Id.ToString(),
+				b.Id == model.BrandId));
+			model.Categories = categories.Select(c => new SelectListItem(
+				string.IsNullOrWhiteSpace(c.NameAr) ? c.Name : $"{c.Name} / {c.NameAr}",
+				c.Id.ToString(),
+				c.Id == model.CategoryId));
 			return model;
 		}
 

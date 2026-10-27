@@ -8,15 +8,15 @@
 <div class="stat-grid">
     <div class="stat-card ok">
         <div class="label">Revenue Today</div>
-        <div class="value money">@Model.RevenueToday.ToString("C")</div>
+        <div class="value money">@MoneyFormat.Format(Model.RevenueToday)</div>
     </div>
     <div class="stat-card brand">
         <div class="label">Revenue This Month</div>
-        <div class="value money">@Model.RevenueThisMonth.ToString("C")</div>
+        <div class="value money">@MoneyFormat.Format(Model.RevenueThisMonth)</div>
     </div>
     <div class="stat-card">
         <div class="label">Revenue All Time</div>
-        <div class="value money">@Model.RevenueAllTime.ToString("C")</div>
+        <div class="value money">@MoneyFormat.Format(Model.RevenueAllTime)</div>
     </div>
     <div class="stat-card warn">
         <div class="label">Paid Orders</div>
@@ -27,19 +27,19 @@
 <div class="stat-grid">
     <div class="stat-card danger">
         <div class="label">Pending Payment (@Model.PendingOrdersCount)</div>
-        <div class="value money">@Model.PendingAmount.ToString("C")</div>
+        <div class="value money">@MoneyFormat.Format(Model.PendingAmount)</div>
     </div>
     <div class="stat-card danger">
         <div class="label">Failed Payments (@Model.FailedOrdersCount)</div>
-        <div class="value money">@Model.FailedAmount.ToString("C")</div>
+        <div class="value money">@MoneyFormat.Format(Model.FailedAmount)</div>
     </div>
     <div class="stat-card brand">
         <div class="label">In Preparing</div>
-        <div class="value money">@Model.PreparingAmount.ToString("C")</div>
+        <div class="value money">@MoneyFormat.Format(Model.PreparingAmount)</div>
     </div>
     <div class="stat-card ok">
         <div class="label">Delivered Value</div>
-        <div class="value money">@Model.DeliveredAmount.ToString("C")</div>
+        <div class="value money">@MoneyFormat.Format(Model.DeliveredAmount)</div>
     </div>
 </div>
 
@@ -59,27 +59,27 @@
             <tbody>
                 <tr>
                     <td><span class="badge-status badge-pending">Pending</span></td>
-                    <td>@Model.PendingAmount.ToString("C")</td>
+                    <td>@MoneyFormat.Format(Model.PendingAmount)</td>
                     <td class="text-muted">No</td>
                 </tr>
                 <tr>
                     <td><span class="badge-status badge-failed">Payment Failed</span></td>
-                    <td>@Model.FailedAmount.ToString("C")</td>
+                    <td>@MoneyFormat.Format(Model.FailedAmount)</td>
                     <td class="text-muted">No</td>
                 </tr>
                 <tr>
                     <td><span class="badge-status badge-prep">Preparing</span></td>
-                    <td>@Model.PreparingAmount.ToString("C")</td>
+                    <td>@MoneyFormat.Format(Model.PreparingAmount)</td>
                     <td>Yes</td>
                 </tr>
                 <tr>
                     <td><span class="badge-status badge-ship">Out For Delivery</span></td>
-                    <td>@Model.OutForDeliveryAmount.ToString("C")</td>
+                    <td>@MoneyFormat.Format(Model.OutForDeliveryAmount)</td>
                     <td>Yes</td>
                 </tr>
                 <tr>
                     <td><span class="badge-status badge-delivered">Delivered</span></td>
-                    <td>@Model.DeliveredAmount.ToString("C")</td>
+                    <td>@MoneyFormat.Format(Model.DeliveredAmount)</td>
                     <td>Yes</td>
                 </tr>
             </tbody>
@@ -126,7 +126,7 @@
                                 @OrderStatusHelper.DisplayName(order.Status)
                             </span>
                         </td>
-                        <td><strong>@order.Total.ToString("C")</strong></td>
+                        <td><strong>@MoneyFormat.Format(order.Total)</strong></td>
                         <td>
                             @if (order.CountsAsRevenue)
                             {

@@ -1,17 +1,21 @@
+using System.Globalization;
 using Talabat.Core.Entities.Order_Aggregate;
 
 namespace Talabat.Admin.Helpers
 {
 	public static class OrderStatusHelper
 	{
+		private static bool IsArabic =>
+			CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("ar", StringComparison.OrdinalIgnoreCase);
+
 		public static string DisplayName(OrderStatus status) => status switch
 		{
-			OrderStatus.Pending => "Pending",
-			OrderStatus.PaymentReceived => "Payment Received",
-			OrderStatus.PaymentFailed => "Payment Failed",
-			OrderStatus.Preparing => "Preparing",
-			OrderStatus.OutForDelivery => "Out For Delivery",
-			OrderStatus.Delivered => "Delivered",
+			OrderStatus.Pending => IsArabic ? "قيد الانتظار" : "Pending",
+			OrderStatus.PaymentReceived => IsArabic ? "تم الدفع" : "Payment Received",
+			OrderStatus.PaymentFailed => IsArabic ? "فشل الدفع" : "Payment Failed",
+			OrderStatus.Preparing => IsArabic ? "قيد التحضير" : "Preparing",
+			OrderStatus.OutForDelivery => IsArabic ? "خرج للتوصيل" : "Out For Delivery",
+			OrderStatus.Delivered => IsArabic ? "تم التوصيل" : "Delivered",
 			_ => status.ToString()
 		};
 

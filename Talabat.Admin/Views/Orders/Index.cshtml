@@ -1,20 +1,20 @@
 @using Talabat.Admin.Helpers
 @model IReadOnlyList<Order>
 @{
-    ViewData["Title"] = "Orders";
+    ViewData["Title"] = L["admin.nav.orders"];
     ViewData["Search"] = ViewBag.Search as string;
-    ViewData["SearchPlaceholder"] = "Search by id, email, status...";
+    ViewData["SearchPlaceholder"] = L["admin.orders.search"];
     var selectedStatus = ViewBag.Status as OrderStatus?;
 }
 
 <div class="panel">
     <div class="panel-header">
-        <h2>All Orders</h2>
+        <h2>@L["admin.orders.all"]</h2>
         <div class="d-flex flex-wrap gap-2 align-items-center">
             <form method="get" class="search-bar">
-                <input type="search" name="q" value="@ViewBag.Search" class="form-control" placeholder="Search by id, email, status..." />
+                <input type="search" name="q" value="@ViewBag.Search" class="form-control" placeholder="@L["admin.orders.search"]" />
                 <select name="status" class="form-select" style="min-width:180px">
-                    <option value="">All statuses</option>
+                    <option value="">@L["admin.orders.allStatuses"]</option>
                     @foreach (OrderStatus st in Enum.GetValues(typeof(OrderStatus)))
                     {
                         if (selectedStatus == st)
@@ -40,18 +40,18 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Buyer</th>
-                    <th>Date</th>
-                    <th>Items</th>
-                    <th>Status</th>
-                    <th>Total</th>
+                    <th>@L["admin.col.buyer"]</th>
+                    <th>@L["admin.col.date"]</th>
+                    <th>@L["admin.col.items"]</th>
+                    <th>@L["admin.col.status"]</th>
+                    <th>@L["admin.col.total"]</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
             @if (!Model.Any())
             {
-                <tr><td colspan="7" class="text-muted">No orders found.</td></tr>
+                <tr><td colspan="7" class="text-muted">@L["admin.orders.none"]</td></tr>
             }
             else
             {
@@ -67,8 +67,8 @@
                                 @OrderStatusHelper.DisplayName(order.Status)
                             </span>
                         </td>
-                        <td>@(order.DeliveryMethod != null ? order.GetTotal().ToString("C") : order.Subtotal.ToString("C"))</td>
-                        <td><a asp-action="Details" asp-route-id="@order.Id">Details</a></td>
+                        <td>@(order.DeliveryMethod != null ? MoneyFormat.Format(order.GetTotal()) : MoneyFormat.Format(order.Subtotal))</td>
+                        <td><a asp-action="Details" asp-route-id="@order.Id">@L["admin.col.details"]</a></td>
                     </tr>
                 }
             }

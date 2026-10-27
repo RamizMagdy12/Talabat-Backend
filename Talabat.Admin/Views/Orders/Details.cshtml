@@ -28,9 +28,9 @@
                     {
                         <tr>
                             <td>@item.Product?.ProductName</td>
-                            <td>@item.Price.ToString("C")</td>
+                            <td>@MoneyFormat.Format(item.Price)</td>
                             <td>@item.Quantity</td>
-                            <td>@((item.Price * item.Quantity).ToString("C"))</td>
+                            <td>@MoneyFormat.Format(item.Price * item.Quantity)</td>
                         </tr>
                     }
                     </tbody>
@@ -49,11 +49,11 @@
                 <dt>Date</dt>
                 <dd>@Model.OrderDate.ToLocalTime().ToString("f")</dd>
                 <dt>Delivery</dt>
-                <dd>@(Model.DeliveryMethod?.ShortName ?? "-") (@(Model.DeliveryMethod?.Cost.ToString("C") ?? "-"))</dd>
+                <dd>@(Model.DeliveryMethod?.ShortName ?? "-") (@(Model.DeliveryMethod != null ? MoneyFormat.Format(Model.DeliveryMethod.Cost) : "-"))</dd>
                 <dt>Subtotal</dt>
-                <dd>@Model.Subtotal.ToString("C")</dd>
+                <dd>@MoneyFormat.Format(Model.Subtotal)</dd>
                 <dt>Total</dt>
-                <dd><strong>@(Model.DeliveryMethod != null ? Model.GetTotal().ToString("C") : Model.Subtotal.ToString("C"))</strong></dd>
+                <dd><strong>@(Model.DeliveryMethod != null ? MoneyFormat.Format(Model.GetTotal()) : MoneyFormat.Format(Model.Subtotal))</strong></dd>
                 <dt>Payment Intent</dt>
                 <dd class="text-break">@(string.IsNullOrWhiteSpace(Model.PaymentIntentId) ? "-" : Model.PaymentIntentId)</dd>
             </dl>

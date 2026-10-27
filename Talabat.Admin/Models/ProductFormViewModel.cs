@@ -8,10 +8,19 @@ namespace Talabat.Admin.Models
 		public int Id { get; set; }
 
 		[Required, MaxLength(100)]
+		[Display(Name = "Name (English)")]
 		public string Name { get; set; } = string.Empty;
 
+		[MaxLength(100)]
+		[Display(Name = "Name (Arabic)")]
+		public string? NameAr { get; set; }
+
 		[Required]
+		[Display(Name = "Description (English)")]
 		public string Description { get; set; } = string.Empty;
+
+		[Display(Name = "Description (Arabic)")]
+		public string? DescriptionAr { get; set; }
 
 		public string PictureUrl { get; set; } = string.Empty;
 

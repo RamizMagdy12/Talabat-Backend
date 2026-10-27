@@ -1,19 +1,19 @@
 @using Talabat.Admin.Helpers
 @model DashboardViewModel
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = L["admin.nav.dashboard"];
 }
 
 <section class="dash-hero">
     <div class="dash-hero__copy">
-        <p class="dash-kicker">Talabat Admin</p>
-        <h2>Operations overview</h2>
-        <p class="dash-hero__sub">Track inventory, order flow, and delivery status in one place.</p>
+        <p class="dash-kicker">@L["admin.brand"]</p>
+        <h2>@L["admin.dash.title"]</h2>
+        <p class="dash-hero__sub">@L["admin.dash.sub"]</p>
     </div>
     <div class="dash-hero__actions">
-        <a class="btn btn-brand" asp-controller="Offers" asp-action="Index">Manage offers</a>
-        <a class="btn btn-outline-dark" asp-controller="Products" asp-action="Create">Add product</a>
-        <a class="btn btn-outline-dark" asp-controller="Orders" asp-action="Index">Manage orders</a>
+        <a class="btn btn-brand" asp-controller="Offers" asp-action="Index">@L["admin.dash.manageOffers"]</a>
+        <a class="btn btn-outline-dark" asp-controller="Products" asp-action="Create">@L["admin.dash.addProduct"]</a>
+        <a class="btn btn-outline-dark" asp-controller="Orders" asp-action="Index">@L["admin.dash.manageOrders"]</a>
     </div>
 </section>
 
@@ -21,28 +21,28 @@
     <article class="stat-card brand">
         <div class="stat-card__icon" aria-hidden="true">P</div>
         <div>
-            <div class="label">Products</div>
+            <div class="label">@L["admin.dash.products"]</div>
             <div class="value">@Model.TotalProducts</div>
         </div>
     </article>
     <article class="stat-card warn">
         <div class="stat-card__icon" aria-hidden="true">!</div>
         <div>
-            <div class="label">Low Stock (≤10)</div>
+            <div class="label">@L["admin.dash.lowStock"]</div>
             <div class="value">@Model.LowStockCount</div>
         </div>
     </article>
     <article class="stat-card danger">
         <div class="stat-card__icon" aria-hidden="true">%</div>
         <div>
-            <div class="label">Active Offers</div>
+            <div class="label">@L["admin.dash.activeOffers"]</div>
             <div class="value">@Model.ActiveOffers</div>
         </div>
     </article>
     <article class="stat-card ok">
         <div class="stat-card__icon" aria-hidden="true">T</div>
         <div>
-            <div class="label">Orders Today</div>
+            <div class="label">@L["admin.dash.ordersToday"]</div>
             <div class="value">@Model.OrdersToday</div>
         </div>
     </article>
@@ -51,29 +51,29 @@
 <section class="pipeline-panel">
     <div class="panel-header">
         <div>
-            <h2>Order pipeline</h2>
-            <p class="panel-sub">Live status breakdown</p>
+            <h2>@L["admin.dash.pipeline"]</h2>
+            <p class="panel-sub">@L["admin.dash.pipelineSub"]</p>
         </div>
     </div>
     <div class="pipeline-grid">
         <div class="pipeline-card">
-            <span class="pipeline-card__label">Pending</span>
+            <span class="pipeline-card__label">@OrderStatusHelper.DisplayName(OrderStatus.Pending)</span>
             <strong>@Model.PendingOrders</strong>
         </div>
         <div class="pipeline-card pipeline-card--paid">
-            <span class="pipeline-card__label">Paid</span>
+            <span class="pipeline-card__label">@L["admin.dash.paid"]</span>
             <strong>@Model.PaidOrders</strong>
         </div>
         <div class="pipeline-card pipeline-card--prep">
-            <span class="pipeline-card__label">Preparing</span>
+            <span class="pipeline-card__label">@OrderStatusHelper.DisplayName(OrderStatus.Preparing)</span>
             <strong>@Model.PreparingOrders</strong>
         </div>
         <div class="pipeline-card pipeline-card--ship">
-            <span class="pipeline-card__label">Out for delivery</span>
+            <span class="pipeline-card__label">@OrderStatusHelper.DisplayName(OrderStatus.OutForDelivery)</span>
             <strong>@Model.OutForDeliveryOrders</strong>
         </div>
         <div class="pipeline-card pipeline-card--done">
-            <span class="pipeline-card__label">Delivered</span>
+            <span class="pipeline-card__label">@OrderStatusHelper.DisplayName(OrderStatus.Delivered)</span>
             <strong>@Model.DeliveredOrders</strong>
         </div>
     </div>
@@ -82,27 +82,27 @@
 <div class="panel">
     <div class="panel-header">
         <div>
-            <h2>Recent orders</h2>
-            <p class="panel-sub">Latest customer activity</p>
+            <h2>@L["admin.dash.recentOrders"]</h2>
+            <p class="panel-sub">@L["admin.dash.recentSub"]</p>
         </div>
-        <a class="btn btn-sm btn-brand" asp-controller="Orders" asp-action="Index">View all</a>
+        <a class="btn btn-sm btn-brand" asp-controller="Orders" asp-action="Index">@L["admin.dash.viewAll"]</a>
     </div>
     <div class="table-responsive">
         <table class="table align-middle mb-0">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Buyer</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Total</th>
+                    <th>@L["admin.col.buyer"]</th>
+                    <th>@L["admin.col.date"]</th>
+                    <th>@L["admin.col.status"]</th>
+                    <th>@L["admin.col.total"]</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
             @if (!Model.RecentOrders.Any())
             {
-                <tr><td colspan="6" class="text-muted">No orders yet.</td></tr>
+                <tr><td colspan="6" class="text-muted">@L["admin.dash.noOrders"]</td></tr>
             }
             else
             {
@@ -117,8 +117,8 @@
                                 @OrderStatusHelper.DisplayName(order.Status)
                             </span>
                         </td>
-                        <td class="money-cell">@order.GetTotal().ToString("C")</td>
-                        <td><a class="table-link" asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">Details</a></td>
+                        <td class="money-cell">@MoneyFormat.Format(order.GetTotal())</td>
+                        <td><a class="table-link" asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">@L["admin.col.details"]</a></td>
                     </tr>
                 }
             }

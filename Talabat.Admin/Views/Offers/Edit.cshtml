@@ -13,7 +13,7 @@
     <div class="panel-header">
         <div>
             <h2>@Model.ProductName</h2>
-            <p class="panel-sub">Regular price: <strong>@Model.RegularPrice.ToString("C")</strong></p>
+            <p class="panel-sub">Regular price: <strong>@MoneyFormat.Format(Model.RegularPrice)</strong></p>
         </div>
         @if (previewUrl != null)
         {

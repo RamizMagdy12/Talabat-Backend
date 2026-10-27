@@ -19,10 +19,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<SharedLocalizer>();
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-	var supported = new[] { new CultureInfo("en"), new CultureInfo("ar") };
-	options.DefaultRequestCulture = new RequestCulture("en");
-	options.SupportedCultures = supported;
-	options.SupportedUICultures = supported;
+	// Culture (numbers/currency/dates) stays en-US; UI culture switches en/ar for strings.
+	options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en");
+	options.SupportedCultures = new[] { new CultureInfo("en-US"), new CultureInfo("ar") };
+	options.SupportedUICultures = new[] { new CultureInfo("en"), new CultureInfo("ar") };
 	options.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider());
 });
 

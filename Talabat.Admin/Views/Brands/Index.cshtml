@@ -18,7 +18,8 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Name</th>
+                    <th>Name (EN)</th>
+                    <th>Name (AR)</th>
                     <th style="width:180px">Actions</th>
                 </tr>
             </thead>
@@ -28,6 +29,7 @@
                 <tr>
                     <td>@brand.Id</td>
                     <td>@brand.Name</td>
+                    <td dir="rtl">@(string.IsNullOrWhiteSpace(brand.NameAr) ? "—" : brand.NameAr)</td>
                     <td class="d-flex gap-2">
                         <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@brand.Id">Edit</a>
                         <form asp-action="Delete" asp-route-id="@brand.Id" method="post" onsubmit="return confirm('Delete this brand?');">

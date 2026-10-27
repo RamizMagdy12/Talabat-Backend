@@ -21,7 +21,9 @@ namespace Talabat.Admin.Controllers
 			if (!string.IsNullOrWhiteSpace(q))
 			{
 				var term = q.Trim();
-				categories = categories.Where(c => c.Name?.Contains(term, StringComparison.OrdinalIgnoreCase) == true).ToList();
+				categories = categories.Where(c =>
+					(c.Name?.Contains(term, StringComparison.OrdinalIgnoreCase) == true) ||
+					(c.NameAr?.Contains(term, StringComparison.OrdinalIgnoreCase) == true)).ToList();
 			}
 
 			ViewBag.Search = q;
@@ -41,6 +43,8 @@ namespace Talabat.Admin.Controllers
 				return View(model);
 			}
 
+			model.Name = model.Name.Trim();
+			model.NameAr = string.IsNullOrWhiteSpace(model.NameAr) ? null : model.NameAr.Trim();
 			await _unitOfWork.Repository<ProductCategory>().AddAsync(model);
 			await _unitOfWork.CompleteAsync();
 			TempData["Success"] = "Category created.";
@@ -69,7 +73,8 @@ namespace Talabat.Admin.Controllers
 			var category = await _unitOfWork.Repository<ProductCategory>().GetAsync(id);
 			if (category == null) return NotFound();
 
-			category.Name = model.Name;
+			category.Name = model.Name.Trim();
+			category.NameAr = string.IsNullOrWhiteSpace(model.NameAr) ? null : model.NameAr.Trim();
 			_unitOfWork.Repository<ProductCategory>().Update(category);
 			await _unitOfWork.CompleteAsync();
 			TempData["Success"] = "Category updated.";

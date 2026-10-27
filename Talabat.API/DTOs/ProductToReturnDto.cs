@@ -11,7 +11,9 @@ namespace Talabat.API.DTOs
 		{
 			profile.CreateMap<Product, ProductToReturnDto>()
 					.ForMember(d => d.Brand, opt => opt.MapFrom(s => s.ProductBrand.Name))
+					.ForMember(d => d.BrandAr, opt => opt.MapFrom(s => s.ProductBrand.NameAr))
 					.ForMember(d => d.Category, opt => opt.MapFrom(s => s.productCategory.Name))
+					.ForMember(d => d.CategoryAr, opt => opt.MapFrom(s => s.productCategory.NameAr))
 					.ForMember(d => d.PictureUrl, opt => opt.MapFrom<ProductPictureUrlResolver>())
 					.AfterMap((src, dest) =>
 					{
@@ -22,7 +24,9 @@ namespace Talabat.API.DTOs
 
 		public int Id { get; set; }
 		public string? Name { get; set; }
+		public string? NameAr { get; set; }
 		public string? Description { get; set; }
+		public string? DescriptionAr { get; set; }
 		public string? PictureUrl { get; set; }
 		public decimal Price { get; set; }
 		public decimal? OfferPrice { get; set; }
@@ -32,7 +36,9 @@ namespace Talabat.API.DTOs
 		public decimal CurrentPrice { get; set; }
 		public int BrandId { get; set; }
 		public string Brand { get; set; }
+		public string? BrandAr { get; set; }
 		public int categoryId { get; set; }
 		public string Category { get; set; }
+		public string? CategoryAr { get; set; }
 	}
 }

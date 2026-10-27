@@ -8,7 +8,8 @@ namespace Talabat.Repository.Data.Configurations
 	{
 		public void Configure(EntityTypeBuilder<ProductCategory> builder)
 		{
-			builder.Property(c => c.Name);
+			builder.Property(c => c.Name).HasMaxLength(100);
+			builder.Property(c => c.NameAr).HasMaxLength(100);
 		}
 	}
 }

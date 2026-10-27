@@ -9,11 +9,13 @@ namespace Talabat.Admin.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult Set(string culture, string? returnUrl = null)
 		{
-			culture = culture is "ar" or "en" ? culture : "en";
+			var ui = culture is "ar" or "en" ? culture : "en";
+			// Keep en-US for numbers/currency ($), Arabic only for UI strings.
+			var requestCulture = new RequestCulture(culture: "en-US", uiCulture: ui);
 
 			Response.Cookies.Append(
 				CookieRequestCultureProvider.DefaultCookieName,
-				CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+				CookieRequestCultureProvider.MakeCookieValue(requestCulture),
 				new CookieOptions
 				{
 					Expires = DateTimeOffset.UtcNow.AddYears(1),

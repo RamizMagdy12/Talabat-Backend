@@ -18,7 +18,7 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Name</th>
+                    <th>Name EN / AR</th>
                     <th>Brand</th>
                     <th>Category</th>
                     <th>Price</th>
@@ -33,14 +33,32 @@
             {
                 <tr class="@(product.IsActive ? "" : "table-secondary")">
                     <td>@product.Id</td>
-                    <td>@product.Name</td>
-                    <td>@product.ProductBrand?.Name</td>
-                    <td>@product.productCategory?.Name</td>
-                    <td>@product.Price.ToString("C")</td>
+                    <td>
+                        <div>@product.Name</div>
+                        @if (!string.IsNullOrWhiteSpace(product.NameAr))
+                        {
+                            <div class="text-muted" dir="rtl" style="font-size:.85rem">@product.NameAr</div>
+                        }
+                    </td>
+                    <td>
+                        @product.ProductBrand?.Name
+                        @if (!string.IsNullOrWhiteSpace(product.ProductBrand?.NameAr))
+                        {
+                            <span class="text-muted"> / @product.ProductBrand!.NameAr</span>
+                        }
+                    </td>
+                    <td>
+                        @product.productCategory?.Name
+                        @if (!string.IsNullOrWhiteSpace(product.productCategory?.NameAr))
+                        {
+                            <span class="text-muted"> / @product.productCategory!.NameAr</span>
+                        }
+                    </td>
+                    <td>@MoneyFormat.Format(product.Price)</td>
                     <td>
                         @if (product.IsOfferActive())
                         {
-                            <span class="badge-status badge-prep">@product.OfferPrice!.Value.ToString("C")</span>
+                            <span class="badge-status badge-prep">@MoneyFormat.Format(product.OfferPrice!.Value)</span>
                         }
                         else
                         {

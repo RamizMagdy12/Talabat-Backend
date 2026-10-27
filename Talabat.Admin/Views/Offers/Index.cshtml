@@ -41,11 +41,11 @@
                     <tr>
                         <td>@product.Id</td>
                         <td><strong>@product.Name</strong></td>
-                        <td>@product.Price.ToString("C")</td>
+                        <td>@MoneyFormat.Format(product.Price)</td>
                         <td>
                             @if (product.OfferPrice.HasValue)
                             {
-                                <span class="money-cell">@product.OfferPrice.Value.ToString("C")</span>
+                                <span class="money-cell">@MoneyFormat.Format(product.OfferPrice.Value)</span>
                             }
                             else
                             {
