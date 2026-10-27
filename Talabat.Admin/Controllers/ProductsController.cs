@@ -78,6 +78,7 @@ namespace Talabat.Admin.Controllers
 				PictureUrl = pictureUrl,
 				Price = model.Price,
 				Stock = model.Stock,
+				IsActive = model.IsActive,
 				BrandId = model.BrandId,
 				categoryId = model.CategoryId
 			};
@@ -102,6 +103,7 @@ namespace Talabat.Admin.Controllers
 				PictureUrl = product.PictureUrl,
 				Price = product.Price,
 				Stock = product.Stock,
+				IsActive = product.IsActive,
 				BrandId = product.BrandId,
 				CategoryId = product.categoryId
 			};
@@ -136,12 +138,29 @@ namespace Talabat.Admin.Controllers
 			product.Description = model.Description;
 			product.Price = model.Price;
 			product.Stock = model.Stock;
+			product.IsActive = model.IsActive;
 			product.BrandId = model.BrandId;
 			product.categoryId = model.CategoryId;
 
 			_unitOfWork.Repository<Product>().Update(product);
 			await _unitOfWork.CompleteAsync();
 			TempData["Success"] = "Product updated.";
+			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> ToggleActive(int id)
+		{
+			var product = await _unitOfWork.Repository<Product>().GetAsync(id);
+			if (product == null) return NotFound();
+
+			product.IsActive = !product.IsActive;
+			_unitOfWork.Repository<Product>().Update(product);
+			await _unitOfWork.CompleteAsync();
+			TempData["Success"] = product.IsActive
+				? $"{product.Name} is now visible on the store."
+				: $"{product.Name} is now hidden from the store.";
 			return RedirectToAction(nameof(Index));
 		}
 

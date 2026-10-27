@@ -14,6 +14,9 @@ namespace Talabat.Core.Entities
         public decimal Price { get; set; }
         public int Stock { get; set; }
 
+        /// <summary>When false, product is hidden from the storefront.</summary>
+        public bool IsActive { get; set; } = true;
+
         /// <summary>Promotional price while the offer window is active.</summary>
         public decimal? OfferPrice { get; set; }
         public DateTime? OfferStartUtc { get; set; }

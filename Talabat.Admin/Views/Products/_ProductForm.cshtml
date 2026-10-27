@@ -29,6 +29,13 @@
         <input asp-for="Stock" class="form-control" />
         <span asp-validation-for="Stock" class="text-danger"></span>
     </div>
+    <div class="col-md-4 d-flex align-items-end">
+        <div class="form-check mb-2">
+            <input asp-for="IsActive" class="form-check-input" />
+            <label asp-for="IsActive" class="form-check-label"></label>
+            <div class="form-text">Uncheck to hide this product from the website.</div>
+        </div>
+    </div>
     <div class="col-md-4">
         <label asp-for="BrandId" class="form-label"></label>
         <select asp-for="BrandId" asp-items="Model.Brands" class="form-select">

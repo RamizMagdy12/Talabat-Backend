@@ -42,7 +42,7 @@ public class ProductService : IProductService
 	{
 		var products = await _unitOfWork.Repository<Product>()
 			.GetAllWithSpecAsync(new ProductWithBrandAndCategorySpecifications());
-		return products.Where(p => p.IsOfferActive()).ToList();
+		return products.Where(p => p.IsActive && p.IsOfferActive()).ToList();
 	}
 
 	public async Task<IReadOnlyList<Product>> GetBestSellersAsync(int count = 8)
@@ -58,8 +58,10 @@ public class ProductService : IProductService
 			.Select(x => x.ProductId)
 			.ToList();
 
-		var catalog = await _unitOfWork.Repository<Product>()
-			.GetAllWithSpecAsync(new ProductWithBrandAndCategorySpecifications());
+		var catalog = (await _unitOfWork.Repository<Product>()
+			.GetAllWithSpecAsync(new ProductWithBrandAndCategorySpecifications()))
+			.Where(p => p.IsActive)
+			.ToList();
 
 		if (rankedIds.Count == 0)
 			return catalog.Take(count).ToList();

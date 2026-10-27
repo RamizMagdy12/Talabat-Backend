@@ -11,6 +11,8 @@ namespace Talabat.Core.ProductSpec
    public class ProductWithBrandAndCategorySpecifications: BaseSpecifications<Product>
     {
 		public ProductWithBrandAndCategorySpecifications(ProductSpecParams parameters):base(p=>
+		p.IsActive
+		&&
 		(string.IsNullOrEmpty(parameters.Search)||p.Name.ToLower().Contains(parameters.Search))
 		&&
 		(!parameters.brandId.HasValue || p.BrandId == parameters.brandId.Value)
@@ -42,7 +44,7 @@ namespace Talabat.Core.ProductSpec
 			}
 			ApplyPagination((parameters.PageIndex - 1) * parameters.PageSize, parameters.PageSize);
 		}
-		public ProductWithBrandAndCategorySpecifications(int id):base(p=>p.Id==id)
+		public ProductWithBrandAndCategorySpecifications(int id):base(p=>p.Id==id && p.IsActive)
 		{
 			AddIncludes();
 		}

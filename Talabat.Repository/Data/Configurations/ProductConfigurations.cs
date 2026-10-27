@@ -19,6 +19,7 @@ namespace Talabat.Repository.Data.Configurations
 			builder.Property(p => p.Price).HasColumnType("decimal(18,2)");
 			builder.Property(p => p.OfferPrice).HasColumnType("decimal(18,2)");
 			builder.Property(p => p.Stock).HasDefaultValue(0);
+			builder.Property(p => p.IsActive).HasDefaultValue(true);
 			builder.HasOne(p => p.ProductBrand).WithMany().HasForeignKey(b => b.BrandId);
 			builder.HasOne(p => p.productCategory).WithMany().HasForeignKey(c => c.categoryId);
 		}

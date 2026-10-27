@@ -24,6 +24,9 @@ namespace Talabat.Admin.Models
 		[Required, Range(0, int.MaxValue)]
 		public int Stock { get; set; }
 
+		[Display(Name = "Visible on store")]
+		public bool IsActive { get; set; } = true;
+
 		[Required, Display(Name = "Brand")]
 		public int BrandId { get; set; }
 
