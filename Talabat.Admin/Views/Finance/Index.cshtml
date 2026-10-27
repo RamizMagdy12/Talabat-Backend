@@ -1,98 +1,98 @@
 @model FinanceViewModel
 @{
-    ViewData["Title"] = "Finance";
+    ViewData["Title"] = L["admin.finance.title"];
     ViewData["Search"] = Model.Search;
-    ViewData["SearchPlaceholder"] = "Search orders by id, email, status...";
+    ViewData["SearchPlaceholder"] = L["admin.finance.search"];
 }
 
 <div class="stat-grid">
     <div class="stat-card ok">
-        <div class="label">Revenue Today</div>
+        <div class="label">@L["admin.finance.revenueToday"]</div>
         <div class="value money">@MoneyFormat.Format(Model.RevenueToday)</div>
     </div>
     <div class="stat-card brand">
-        <div class="label">Revenue This Month</div>
+        <div class="label">@L["admin.finance.revenueMonth"]</div>
         <div class="value money">@MoneyFormat.Format(Model.RevenueThisMonth)</div>
     </div>
     <div class="stat-card">
-        <div class="label">Revenue All Time</div>
+        <div class="label">@L["admin.finance.revenueAll"]</div>
         <div class="value money">@MoneyFormat.Format(Model.RevenueAllTime)</div>
     </div>
     <div class="stat-card warn">
-        <div class="label">Paid Orders</div>
+        <div class="label">@L["admin.finance.paidOrders"]</div>
         <div class="value">@Model.PaidOrdersCount</div>
     </div>
 </div>
 
 <div class="stat-grid">
     <div class="stat-card danger">
-        <div class="label">Pending Payment (@Model.PendingOrdersCount)</div>
+        <div class="label">@L["admin.finance.pendingPayment"] (@Model.PendingOrdersCount)</div>
         <div class="value money">@MoneyFormat.Format(Model.PendingAmount)</div>
     </div>
     <div class="stat-card danger">
-        <div class="label">Failed Payments (@Model.FailedOrdersCount)</div>
+        <div class="label">@L["admin.finance.failedPayments"] (@Model.FailedOrdersCount)</div>
         <div class="value money">@MoneyFormat.Format(Model.FailedAmount)</div>
     </div>
     <div class="stat-card brand">
-        <div class="label">In Preparing</div>
+        <div class="label">@L["admin.finance.inPreparing"]</div>
         <div class="value money">@MoneyFormat.Format(Model.PreparingAmount)</div>
     </div>
     <div class="stat-card ok">
-        <div class="label">Delivered Value</div>
+        <div class="label">@L["admin.finance.deliveredValue"]</div>
         <div class="value money">@MoneyFormat.Format(Model.DeliveredAmount)</div>
     </div>
 </div>
 
 <div class="panel mb-3">
     <div class="panel-header">
-        <h2>Money by Stage</h2>
+        <h2>@L["admin.finance.moneyByStage"]</h2>
     </div>
     <div class="table-responsive">
         <table class="table align-middle mb-0">
             <thead>
                 <tr>
-                    <th>Stage</th>
-                    <th>Amount</th>
-                    <th>Counts as revenue?</th>
+                    <th>@L["admin.finance.stage"]</th>
+                    <th>@L["admin.finance.amount"]</th>
+                    <th>@L["admin.finance.countsRevenue"]</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><span class="badge-status badge-pending">Pending</span></td>
+                    <td><span class="badge-status badge-pending">@OrderStatusHelper.DisplayName(OrderStatus.Pending)</span></td>
                     <td>@MoneyFormat.Format(Model.PendingAmount)</td>
-                    <td class="text-muted">No</td>
+                    <td class="text-muted">@L["admin.common.no"]</td>
                 </tr>
                 <tr>
-                    <td><span class="badge-status badge-failed">Payment Failed</span></td>
+                    <td><span class="badge-status badge-failed">@OrderStatusHelper.DisplayName(OrderStatus.PaymentFailed)</span></td>
                     <td>@MoneyFormat.Format(Model.FailedAmount)</td>
-                    <td class="text-muted">No</td>
+                    <td class="text-muted">@L["admin.common.no"]</td>
                 </tr>
                 <tr>
-                    <td><span class="badge-status badge-prep">Preparing</span></td>
+                    <td><span class="badge-status badge-prep">@OrderStatusHelper.DisplayName(OrderStatus.Preparing)</span></td>
                     <td>@MoneyFormat.Format(Model.PreparingAmount)</td>
-                    <td>Yes</td>
+                    <td>@L["admin.common.yes"]</td>
                 </tr>
                 <tr>
-                    <td><span class="badge-status badge-ship">Out For Delivery</span></td>
+                    <td><span class="badge-status badge-ship">@OrderStatusHelper.DisplayName(OrderStatus.OutForDelivery)</span></td>
                     <td>@MoneyFormat.Format(Model.OutForDeliveryAmount)</td>
-                    <td>Yes</td>
+                    <td>@L["admin.common.yes"]</td>
                 </tr>
                 <tr>
-                    <td><span class="badge-status badge-delivered">Delivered</span></td>
+                    <td><span class="badge-status badge-delivered">@OrderStatusHelper.DisplayName(OrderStatus.Delivered)</span></td>
                     <td>@MoneyFormat.Format(Model.DeliveredAmount)</td>
-                    <td>Yes</td>
+                    <td>@L["admin.common.yes"]</td>
                 </tr>
             </tbody>
         </table>
     </div>
     <p class="text-muted mt-3 mb-0" style="font-size:.85rem">
-        Revenue includes orders with status Payment Received, Preparing, Out For Delivery, or Delivered.
+        @L["admin.finance.revenueNote"]
     </p>
 </div>
 
 <div class="panel">
     <div class="panel-header">
-        <h2>Order Money Log</h2>
+        <h2>@L["admin.finance.orderMoneyLog"]</h2>
         <partial name="_SearchBar" />
     </div>
     <div class="table-responsive">
@@ -100,18 +100,18 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Buyer</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                    <th>Revenue</th>
+                    <th>@L["admin.col.buyer"]</th>
+                    <th>@L["admin.col.date"]</th>
+                    <th>@L["admin.col.status"]</th>
+                    <th>@L["admin.col.total"]</th>
+                    <th>@L["admin.finance.revenue"]</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
             @if (!Model.RecentOrders.Any())
             {
-                <tr><td colspan="7" class="text-muted">No orders found.</td></tr>
+                <tr><td colspan="7" class="text-muted">@L["admin.orders.none"]</td></tr>
             }
             else
             {
@@ -130,14 +130,14 @@
                         <td>
                             @if (order.CountsAsRevenue)
                             {
-                                <span class="badge-status badge-paid">Yes</span>
+                                <span class="badge-status badge-paid">@L["admin.common.yes"]</span>
                             }
                             else
                             {
-                                <span class="badge-status badge-pending">No</span>
+                                <span class="badge-status badge-pending">@L["admin.common.no"]</span>
                             }
                         </td>
-                        <td><a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">Details</a></td>
+                        <td><a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">@L["admin.col.details"]</a></td>
                     </tr>
                 }
             }

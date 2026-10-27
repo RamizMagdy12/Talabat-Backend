@@ -1,47 +1,47 @@
 @model AccountsIndexViewModel
 @{
-    ViewData["Title"] = "Users";
+    ViewData["Title"] = L["admin.users.title"];
     ViewData["Search"] = Model.Search;
-    ViewData["SearchPlaceholder"] = "Search by name, email, phone...";
+    ViewData["SearchPlaceholder"] = L["admin.users.search"];
 }
 
 <div class="stat-grid">
     <div class="stat-card brand">
-        <div class="label">Accounts</div>
+        <div class="label">@L["admin.users.accounts"]</div>
         <div class="value">@Model.TotalAccounts</div>
     </div>
     <div class="stat-card warn">
-        <div class="label">Orders Today</div>
+        <div class="label">@L["admin.users.ordersToday"]</div>
         <div class="value">@Model.OrdersToday</div>
     </div>
     <div class="stat-card ok">
-        <div class="label">Orders This Month</div>
+        <div class="label">@L["admin.users.ordersMonth"]</div>
         <div class="value">@Model.OrdersThisMonth</div>
     </div>
 </div>
 
 <div class="panel">
     <div class="panel-header">
-        <h2>All Accounts</h2>
+        <h2>@L["admin.users.all"]</h2>
         <partial name="_SearchBar" />
     </div>
     <div class="table-responsive">
         <table class="table align-middle mb-0">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Roles</th>
-                    <th>Today</th>
-                    <th>This Month</th>
-                    <th>Total Orders</th>
+                    <th>@L["admin.users.name"]</th>
+                    <th>@L["admin.users.email"]</th>
+                    <th>@L["admin.users.phone"]</th>
+                    <th>@L["admin.users.roles"]</th>
+                    <th>@L["admin.users.today"]</th>
+                    <th>@L["admin.users.thisMonth"]</th>
+                    <th>@L["admin.users.totalOrders"]</th>
                 </tr>
             </thead>
             <tbody>
             @if (!Model.Accounts.Any())
             {
-                <tr><td colspan="7" class="text-muted">No accounts found.</td></tr>
+                <tr><td colspan="7" class="text-muted">@L["admin.users.none"]</td></tr>
             }
             else
             {
@@ -61,7 +61,7 @@
                             }
                             else
                             {
-                                <span class="text-muted">Customer</span>
+                                <span class="text-muted">@L["admin.users.customer"]</span>
                             }
                         </td>
                         <td>@account.OrdersToday</td>

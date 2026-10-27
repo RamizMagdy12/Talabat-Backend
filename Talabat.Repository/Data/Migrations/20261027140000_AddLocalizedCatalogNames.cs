@@ -12,40 +12,30 @@ namespace Talabat.Repository.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "NameAr",
-                table: "products",
-                type: "nvarchar(100)",
-                maxLength: 100,
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "DescriptionAr",
-                table: "products",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "NameAr",
-                table: "productBrands",
-                type: "nvarchar(100)",
-                maxLength: 100,
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "NameAr",
-                table: "productCategories",
-                type: "nvarchar(100)",
-                maxLength: 100,
-                nullable: true);
+            migrationBuilder.Sql(@"
+IF COL_LENGTH('products', 'NameAr') IS NULL
+    ALTER TABLE products ADD NameAr nvarchar(100) NULL;
+IF COL_LENGTH('products', 'DescriptionAr') IS NULL
+    ALTER TABLE products ADD DescriptionAr nvarchar(max) NULL;
+IF COL_LENGTH('productBrands', 'NameAr') IS NULL
+    ALTER TABLE productBrands ADD NameAr nvarchar(100) NULL;
+IF COL_LENGTH('productCategories', 'NameAr') IS NULL
+    ALTER TABLE productCategories ADD NameAr nvarchar(100) NULL;
+");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(name: "NameAr", table: "products");
-            migrationBuilder.DropColumn(name: "DescriptionAr", table: "products");
-            migrationBuilder.DropColumn(name: "NameAr", table: "productBrands");
-            migrationBuilder.DropColumn(name: "NameAr", table: "productCategories");
+            migrationBuilder.Sql(@"
+IF COL_LENGTH('products', 'DescriptionAr') IS NOT NULL
+    ALTER TABLE products DROP COLUMN DescriptionAr;
+IF COL_LENGTH('products', 'NameAr') IS NOT NULL
+    ALTER TABLE products DROP COLUMN NameAr;
+IF COL_LENGTH('productBrands', 'NameAr') IS NOT NULL
+    ALTER TABLE productBrands DROP COLUMN NameAr;
+IF COL_LENGTH('productCategories', 'NameAr') IS NOT NULL
+    ALTER TABLE productCategories DROP COLUMN NameAr;
+");
         }
     }
 }

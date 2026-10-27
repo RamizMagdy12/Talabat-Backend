@@ -1,6 +1,6 @@
 @model OfferFormViewModel
 @{
-    ViewData["Title"] = "Manage Offer";
+    ViewData["Title"] = L["admin.offers.manageTitle"];
     var apiBase = (Configuration["ApiBaseUrl"] ?? "").TrimEnd('/');
     var previewUrl = string.IsNullOrWhiteSpace(Model.PictureUrl)
         ? null
@@ -13,7 +13,7 @@
     <div class="panel-header">
         <div>
             <h2>@Model.ProductName</h2>
-            <p class="panel-sub">Regular price: <strong>@MoneyFormat.Format(Model.RegularPrice)</strong></p>
+            <p class="panel-sub">@L["admin.offers.regularPrice"]: <strong>@MoneyFormat.Format(Model.RegularPrice)</strong></p>
         </div>
         @if (previewUrl != null)
         {
@@ -31,18 +31,18 @@
 
         <div class="row g-3">
             <div class="col-md-4">
-                <label asp-for="OfferPrice" class="form-label"></label>
+                <label asp-for="OfferPrice" class="form-label">@L["admin.offers.offerPrice"]</label>
                 <input asp-for="OfferPrice" class="form-control" step="0.01" />
                 <span asp-validation-for="OfferPrice" class="text-danger"></span>
             </div>
             <div class="col-md-4">
-                <label asp-for="OfferStartLocal" class="form-label"></label>
+                <label asp-for="OfferStartLocal" class="form-label">@L["admin.offers.starts"]</label>
                 <input name="OfferStartLocal" class="form-control" type="datetime-local"
                        value="@(Model.OfferStartLocal?.ToString("yyyy-MM-ddTHH:mm"))" />
                 <span asp-validation-for="OfferStartLocal" class="text-danger"></span>
             </div>
             <div class="col-md-4">
-                <label asp-for="OfferEndLocal" class="form-label"></label>
+                <label asp-for="OfferEndLocal" class="form-label">@L["admin.offers.ends"]</label>
                 <input name="OfferEndLocal" class="form-control" type="datetime-local"
                        value="@(Model.OfferEndLocal?.ToString("yyyy-MM-ddTHH:mm"))" />
                 <span asp-validation-for="OfferEndLocal" class="text-danger"></span>
@@ -50,14 +50,14 @@
             <div class="col-12">
                 <div class="form-check">
                     <input asp-for="ClearOffer" class="form-check-input" />
-                    <label asp-for="ClearOffer" class="form-check-label">Clear offer (remove promo)</label>
+                    <label asp-for="ClearOffer" class="form-check-label">@L["admin.offers.clear"]</label>
                 </div>
             </div>
         </div>
 
         <div class="d-flex gap-2 mt-3">
-            <button type="submit" class="btn btn-brand">Save offer</button>
-            <a class="btn btn-outline-secondary" asp-action="Index">Back</a>
+            <button type="submit" class="btn btn-brand">@L["admin.offers.save"]</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">@L["admin.offers.back"]</a>
         </div>
     </form>
 </div>

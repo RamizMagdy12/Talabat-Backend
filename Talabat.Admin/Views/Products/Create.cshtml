@@ -1,15 +1,15 @@
 @model ProductFormViewModel
 @{
-    ViewData["Title"] = "Add Product";
+    ViewData["Title"] = L["admin.products.add"];
 }
 
 <div class="panel" style="max-width:720px">
-    <div class="panel-header"><h2>New Product</h2></div>
+    <div class="panel-header"><h2>@L["admin.products.new"]</h2></div>
     <form asp-action="Create" method="post" enctype="multipart/form-data">
         <partial name="_ProductForm" model="Model" />
         <div class="d-flex gap-2 mt-3">
-            <button type="submit" class="btn btn-brand">Save</button>
-            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+            <button type="submit" class="btn btn-brand">@L["admin.products.save"]</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">@L["admin.common.cancel"]</a>
         </div>
     </form>
 </div>

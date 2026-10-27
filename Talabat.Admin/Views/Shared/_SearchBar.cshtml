@@ -1,5 +1,5 @@
 @{
-    var placeholder = ViewData["SearchPlaceholder"] as string ?? "Search...";
+    var placeholder = ViewData["SearchPlaceholder"] as string ?? L["admin.common.search"];
     var value = ViewData["Search"] as string ?? "";
     var action = ViewData["SearchAction"] as string;
     var controller = ViewData["SearchController"] as string;
@@ -14,9 +14,9 @@
            class="form-control"
            placeholder="@placeholder"
            autocomplete="off" />
-    <button type="submit" class="btn btn-brand">Search</button>
+    <button type="submit" class="btn btn-brand">@L["admin.common.search"]</button>
     @if (!string.IsNullOrWhiteSpace(value))
     {
-        <a class="btn btn-outline-secondary" asp-action="@(action ?? "Index")" asp-controller="@controller">Clear</a>
+        <a class="btn btn-outline-secondary" asp-action="@(action ?? "Index")" asp-controller="@controller">@L["admin.common.clear"]</a>
     }
 </form>

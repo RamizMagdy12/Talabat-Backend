@@ -1,6 +1,6 @@
 @model LoginViewModel
 @{
-    ViewData["Title"] = "Admin Login";
+    ViewData["Title"] = L["admin.login.title"];
     Layout = "_Layout";
 }
 
@@ -11,28 +11,28 @@
     <div class="login-grid"></div>
 
     <div class="login-card">
-        <h1>Talabat Admin</h1>
-        <p class="subtitle">Sign in to manage inventory and orders.</p>
+        <h1>@L["admin.login.heading"]</h1>
+        <p class="subtitle">@L["admin.login.sub"]</p>
 
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
         <form asp-action="Login" method="post">
             <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
             <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
+                <label asp-for="Email" class="form-label">@L["admin.login.email"]</label>
                 <input asp-for="Email" class="form-control" autocomplete="username" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
+                <label asp-for="Password" class="form-label">@L["admin.login.password"]</label>
                 <input asp-for="Password" class="form-control" autocomplete="current-password" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-check mb-3">
                 <input asp-for="RememberMe" class="form-check-input" />
-                <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+                <label asp-for="RememberMe" class="form-check-label">@L["admin.login.remember"]</label>
             </div>
-            <button type="submit" class="btn btn-brand w-100">Sign in</button>
+            <button type="submit" class="btn btn-brand w-100">@L["admin.login.submit"]</button>
         </form>
     </div>
 </div>

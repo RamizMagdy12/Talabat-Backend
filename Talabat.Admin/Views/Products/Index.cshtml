@@ -1,31 +1,31 @@
 @model IReadOnlyList<Product>
 @{
-    ViewData["Title"] = "Products";
+    ViewData["Title"] = L["admin.products.title"];
     ViewData["Search"] = ViewBag.Search as string;
-    ViewData["SearchPlaceholder"] = "Search products, brand, category...";
+    ViewData["SearchPlaceholder"] = L["admin.products.search"];
 }
 
 <div class="panel">
     <div class="panel-header">
-        <h2>Inventory</h2>
+        <h2>@L["admin.products.list"]</h2>
         <div class="d-flex flex-wrap gap-2 align-items-center">
             <partial name="_SearchBar" />
-            <a class="btn btn-brand btn-sm" asp-action="Create">Add Product</a>
+            <a class="btn btn-brand btn-sm" asp-action="Create">@L["admin.products.add"]</a>
         </div>
     </div>
     <div class="table-responsive">
         <table class="table align-middle mb-0">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Name EN / AR</th>
-                    <th>Brand</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Offer</th>
-                    <th>Stock</th>
-                    <th>Status</th>
-                    <th style="width:280px">Actions</th>
+                    <th>@L["admin.common.id"]</th>
+                    <th>@L["admin.products.nameEnAr"]</th>
+                    <th>@L["admin.products.brand"]</th>
+                    <th>@L["admin.products.category"]</th>
+                    <th>@L["admin.products.price"]</th>
+                    <th>@L["admin.products.offer"]</th>
+                    <th>@L["admin.products.stock"]</th>
+                    <th>@L["admin.products.status"]</th>
+                    <th style="width:280px">@L["admin.common.actions"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,25 +78,25 @@
                     <td>
                         @if (product.IsActive)
                         {
-                            <span class="badge-status badge-delivered">Active</span>
+                            <span class="badge-status badge-delivered">@L["admin.common.active"]</span>
                         }
                         else
                         {
-                            <span class="badge-status badge-failed">Hidden</span>
+                            <span class="badge-status badge-failed">@L["admin.common.hidden"]</span>
                         }
                     </td>
                     <td class="d-flex gap-2 flex-wrap">
-                        <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@product.Id">Edit</a>
-                        <a class="btn btn-sm btn-brand" asp-controller="Offers" asp-action="Edit" asp-route-id="@product.Id">Offer</a>
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@product.Id">@L["admin.common.edit"]</a>
+                        <a class="btn btn-sm btn-brand" asp-controller="Offers" asp-action="Edit" asp-route-id="@product.Id">@L["admin.products.offer"]</a>
                         <form asp-action="ToggleActive" asp-route-id="@product.Id" method="post">
                             @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-sm @(product.IsActive ? "btn-outline-secondary" : "btn-outline-success")">
-                                @(product.IsActive ? "Hide" : "Show")
+                                @(product.IsActive ? L["admin.products.hide"] : L["admin.products.show"])
                             </button>
                         </form>
-                        <form asp-action="Delete" asp-route-id="@product.Id" method="post" onsubmit="return confirm('Delete this product?');">
+                        <form asp-action="Delete" asp-route-id="@product.Id" method="post" onsubmit="return confirm('@L["admin.products.deleteConfirm"]');">
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            <button type="submit" class="btn btn-sm btn-outline-danger">@L["admin.common.delete"]</button>
                         </form>
                     </td>
                 </tr>

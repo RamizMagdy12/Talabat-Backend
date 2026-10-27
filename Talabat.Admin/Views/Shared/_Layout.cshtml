@@ -115,6 +115,16 @@
 else
 {
     <main class="auth-wrap">
+        <div class="auth-lang">
+            <form class="lang-switch-form" asp-controller="Language" asp-action="Set" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="returnUrl" value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
+                <input type="hidden" name="culture" value="@(uiLang == "ar" ? "en" : "ar")" />
+                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                    @(uiLang == "ar" ? L["lang.en"] : L["lang.ar"])
+                </button>
+            </form>
+        </div>
         @RenderBody()
     </main>
 }

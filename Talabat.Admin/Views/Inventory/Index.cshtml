@@ -2,28 +2,28 @@
 @{
     ViewData["Title"] = L["admin.inventory.title"];
     ViewData["Search"] = Model.Search;
-    ViewData["SearchPlaceholder"] = "Search product or brand...";
+    ViewData["SearchPlaceholder"] = L["admin.inventory.search"];
 }
 
 <div class="stat-grid">
     <div class="stat-card brand">
-        <div class="label">Products</div>
+        <div class="label">@L["admin.inventory.products"]</div>
         <div class="value">@Model.TotalSkus</div>
     </div>
     <div class="stat-card ok">
-        <div class="label">Units remaining</div>
+        <div class="label">@L["admin.inventory.unitsRemaining"]</div>
         <div class="value">@Model.UnitsRemaining</div>
     </div>
     <div class="stat-card">
-        <div class="label">Units added</div>
+        <div class="label">@L["admin.inventory.unitsAdded"]</div>
         <div class="value">@Model.UnitsAdded</div>
     </div>
     <div class="stat-card warn">
-        <div class="label">Units sold</div>
+        <div class="label">@L["admin.inventory.unitsSold"]</div>
         <div class="value">@Model.UnitsSold</div>
     </div>
     <div class="stat-card danger">
-        <div class="label">Low stock (≤10)</div>
+        <div class="label">@L["admin.inventory.lowStock"]</div>
         <div class="value">@Model.LowStockCount</div>
     </div>
 </div>
@@ -50,7 +50,7 @@
             <tbody>
             @if (!Model.Products.Any())
             {
-                <tr><td colspan="7" class="text-muted py-4 text-center">No products found.</td></tr>
+                <tr><td colspan="7" class="text-muted py-4 text-center">@L["admin.inventory.none"]</td></tr>
             }
             else
             {
@@ -67,7 +67,7 @@
                                 }
                                 @if (!row.IsActive)
                                 {
-                                    <span class="badge-status badge-failed">Hidden</span>
+                                    <span class="badge-status badge-failed">@L["admin.common.hidden"]</span>
                                 }
                             </div>
                         </td>

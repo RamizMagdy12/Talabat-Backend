@@ -1,14 +1,14 @@
 @using Talabat.Admin.Helpers
 @model Order
 @{
-    ViewData["Title"] = $"Order #{Model.Id}";
+    ViewData["Title"] = L.Get("admin.orders.title", ("id", Model.Id));
 }
 
 <div class="row g-3">
     <div class="col-lg-8">
         <div class="panel">
             <div class="panel-header">
-                <h2>Items</h2>
+                <h2>@L["admin.orders.items"]</h2>
                 <span class="badge-status @OrderStatusHelper.BadgeClass(Model.Status)">
                     @OrderStatusHelper.DisplayName(Model.Status)
                 </span>
@@ -17,10 +17,10 @@
                 <table class="table align-middle mb-0">
                     <thead>
                         <tr>
-                            <th>Product</th>
-                            <th>Price</th>
-                            <th>Qty</th>
-                            <th>Line</th>
+                            <th>@L["admin.orders.product"]</th>
+                            <th>@L["admin.orders.price"]</th>
+                            <th>@L["admin.orders.qty"]</th>
+                            <th>@L["admin.orders.line"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,27 +40,27 @@
     </div>
     <div class="col-lg-4">
         <div class="panel mb-3">
-            <div class="panel-header"><h2>Summary</h2></div>
+            <div class="panel-header"><h2>@L["admin.orders.summary"]</h2></div>
             <dl class="mb-0">
-                <dt>Buyer</dt>
+                <dt>@L["admin.col.buyer"]</dt>
                 <dd>@Model.BuyerEmail</dd>
-                <dt>Phone</dt>
+                <dt>@L["admin.orders.phone"]</dt>
                 <dd>@(string.IsNullOrWhiteSpace((string?)ViewBag.BuyerPhone) ? "-" : ViewBag.BuyerPhone)</dd>
-                <dt>Date</dt>
+                <dt>@L["admin.col.date"]</dt>
                 <dd>@Model.OrderDate.ToLocalTime().ToString("f")</dd>
-                <dt>Delivery</dt>
+                <dt>@L["admin.orders.delivery"]</dt>
                 <dd>@(Model.DeliveryMethod?.ShortName ?? "-") (@(Model.DeliveryMethod != null ? MoneyFormat.Format(Model.DeliveryMethod.Cost) : "-"))</dd>
-                <dt>Subtotal</dt>
+                <dt>@L["admin.orders.subtotal"]</dt>
                 <dd>@MoneyFormat.Format(Model.Subtotal)</dd>
-                <dt>Total</dt>
+                <dt>@L["admin.col.total"]</dt>
                 <dd><strong>@(Model.DeliveryMethod != null ? MoneyFormat.Format(Model.GetTotal()) : MoneyFormat.Format(Model.Subtotal))</strong></dd>
-                <dt>Payment Intent</dt>
+                <dt>@L["admin.orders.paymentIntent"]</dt>
                 <dd class="text-break">@(string.IsNullOrWhiteSpace(Model.PaymentIntentId) ? "-" : Model.PaymentIntentId)</dd>
             </dl>
             @if (Model.ShippingAddress != null)
             {
                 <hr />
-                <h3 class="h6">Shipping</h3>
+                <h3 class="h6">@L["admin.orders.shipping"]</h3>
                 <p class="mb-0">
                     @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName<br />
                     @if (!string.IsNullOrWhiteSpace((string?)ViewBag.BuyerPhone))
@@ -74,8 +74,8 @@
         </div>
 
         <div class="panel">
-            <div class="panel-header"><h2>Update Status</h2></div>
-            <p class="text-muted" style="font-size:.85rem">Customer sees this status live in their orders page.</p>
+            <div class="panel-header"><h2>@L["admin.orders.updateStatus"]</h2></div>
+            <p class="text-muted" style="font-size:.85rem">@L["admin.orders.statusHint"]</p>
             <form asp-action="UpdateStatus" method="post">
                 <input type="hidden" name="id" value="@Model.Id" />
                 <div class="mb-3">
@@ -93,9 +93,9 @@
                         }
                     </select>
                 </div>
-                <button type="submit" class="btn btn-brand w-100">Save status</button>
+                <button type="submit" class="btn btn-brand w-100">@L["admin.orders.saveStatus"]</button>
             </form>
-            <a class="btn btn-outline-secondary w-100 mt-2" asp-action="Index">Back to orders</a>
+            <a class="btn btn-outline-secondary w-100 mt-2" asp-action="Index">@L["admin.orders.back"]</a>
         </div>
     </div>
 </div>

@@ -1,24 +1,24 @@
 @model ProductBrand
 @{
-    ViewData["Title"] = "Add Brand";
+    ViewData["Title"] = L["admin.brands.add"];
 }
 
 <div class="panel" style="max-width:560px">
-    <div class="panel-header"><h2>New Brand</h2></div>
+    <div class="panel-header"><h2>@L["admin.brands.new"]</h2></div>
     <form asp-action="Create" method="post">
         <div class="mb-3">
-            <label asp-for="Name" class="form-label">Name (English)</label>
-            <input asp-for="Name" class="form-control" placeholder="English name" />
+            <label asp-for="Name" class="form-label">@L["admin.brands.nameEn"]</label>
+            <input asp-for="Name" class="form-control" placeholder="@L["admin.products.nameEnPh"]" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="NameAr" class="form-label">Name (Arabic)</label>
-            <input asp-for="NameAr" class="form-control" dir="rtl" placeholder="الاسم بالعربي" />
+            <label asp-for="NameAr" class="form-label">@L["admin.brands.nameAr"]</label>
+            <input asp-for="NameAr" class="form-control" dir="rtl" placeholder="@L["admin.products.nameArPh"]" />
             <span asp-validation-for="NameAr" class="text-danger"></span>
         </div>
         <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-brand">Save</button>
-            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+            <button type="submit" class="btn btn-brand">@L["admin.products.save"]</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">@L["admin.common.cancel"]</a>
         </div>
     </form>
 </div>

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Talabat.Admin.Helpers;
+using Talabat.Admin.Localization;
 using Talabat.Core.Entities.Identity;
 using Talabat.Core.Entities.Order_Aggregate;
 using Talabat.Core.Services.Contract;
@@ -13,11 +14,13 @@ namespace Talabat.Admin.Controllers
 	{
 		private readonly IOrderService _orderService;
 		private readonly UserManager<AppUser> _userManager;
+		private readonly SharedLocalizer _L;
 
-		public OrdersController(IOrderService orderService, UserManager<AppUser> userManager)
+		public OrdersController(IOrderService orderService, UserManager<AppUser> userManager, SharedLocalizer L)
 		{
 			_orderService = orderService;
 			_userManager = userManager;
+			_L = L;
 		}
 
 		public async Task<IActionResult> Index(string? q, OrderStatus? status)
@@ -64,8 +67,8 @@ namespace Talabat.Admin.Controllers
 		{
 			var updated = await _orderService.UpdateOrderStatusAsync(id, status);
 			TempData[updated ? "Success" : "Error"] = updated
-				? "Order status updated."
-				: "Failed to update order status.";
+				? _L["admin.msg.orderUpdated"]
+				: _L["admin.msg.orderUpdateFailed"];
 			return RedirectToAction(nameof(Details), new { id });
 		}
 	}

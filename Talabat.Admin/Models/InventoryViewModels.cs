@@ -47,12 +47,20 @@ namespace Talabat.Admin.Models
 		public string? Note { get; set; }
 		public int? OrderId { get; set; }
 
-		public string TypeLabel => Type switch
+		public string TypeLabel
 		{
-			StockMovementType.StockIn => "Stock in",
-			StockMovementType.Sale => "Sold",
-			StockMovementType.Adjustment => "Adjustment",
-			_ => Type.ToString()
-		};
+			get
+			{
+				var ar = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName
+					.Equals("ar", StringComparison.OrdinalIgnoreCase);
+				return Type switch
+				{
+					StockMovementType.StockIn => ar ? "إضافة مخزون" : "Stock in",
+					StockMovementType.Sale => ar ? "بيع" : "Sold",
+					StockMovementType.Adjustment => ar ? "تعديل" : "Adjustment",
+					_ => Type.ToString()
+				};
+			}
+		}
 	}
 }

@@ -540,6 +540,25 @@ html[dir="rtl"] .sidebar {
 .auth-wrap {
   min-height: 100vh;
   padding: 0;
+  position: relative;
+}
+
+.auth-lang {
+  position: absolute;
+  top: 1rem;
+  inset-inline-end: 1rem;
+  z-index: 5;
+}
+
+.auth-lang .btn {
+  background: rgba(255,255,255,.12);
+  border-color: rgba(255,255,255,.28);
+  color: #fff;
+}
+
+html[dir="rtl"] .auth-lang {
+  inset-inline-end: auto;
+  inset-inline-start: 1rem;
 }
 
 .login-stage {

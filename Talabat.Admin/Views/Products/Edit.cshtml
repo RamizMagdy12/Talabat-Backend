@@ -1,16 +1,16 @@
 @model ProductFormViewModel
 @{
-    ViewData["Title"] = "Edit Product";
+    ViewData["Title"] = L["admin.products.edit"];
 }
 
 <div class="panel" style="max-width:720px">
-    <div class="panel-header"><h2>Edit Product #@Model.Id</h2></div>
+    <div class="panel-header"><h2>@L["admin.products.edit"] #@Model.Id</h2></div>
     <form asp-action="Edit" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="Id" />
         <partial name="_ProductForm" model="Model" />
         <div class="d-flex gap-2 mt-3">
-            <button type="submit" class="btn btn-brand">Update</button>
-            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+            <button type="submit" class="btn btn-brand">@L["admin.common.update"]</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">@L["admin.common.cancel"]</a>
         </div>
     </form>
 </div>

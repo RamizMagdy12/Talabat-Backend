@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Talabat.Admin.Localization;
 using Talabat.Admin.Models;
 using Talabat.Core;
 using Talabat.Core.Entities;
@@ -19,12 +20,14 @@ namespace Talabat.Admin.Controllers
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IWebHostEnvironment _env;
 		private readonly IConfiguration _configuration;
+		private readonly SharedLocalizer _L;
 
-		public ProductsController(IUnitOfWork unitOfWork, IWebHostEnvironment env, IConfiguration configuration)
+		public ProductsController(IUnitOfWork unitOfWork, IWebHostEnvironment env, IConfiguration configuration, SharedLocalizer L)
 		{
 			_unitOfWork = unitOfWork;
 			_env = env;
 			_configuration = configuration;
+			_L = L;
 		}
 
 		public async Task<IActionResult> Index(string? q)
@@ -103,7 +106,7 @@ namespace Talabat.Admin.Controllers
 				await _unitOfWork.CompleteAsync();
 			}
 
-			TempData["Success"] = "Product created.";
+			TempData["Success"] = _L["admin.msg.productCreated"];
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -187,7 +190,7 @@ namespace Talabat.Admin.Controllers
 			}
 
 			await _unitOfWork.CompleteAsync();
-			TempData["Success"] = "Product updated.";
+			TempData["Success"] = _L["admin.msg.productUpdated"];
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -202,8 +205,8 @@ namespace Talabat.Admin.Controllers
 			_unitOfWork.Repository<Product>().Update(product);
 			await _unitOfWork.CompleteAsync();
 			TempData["Success"] = product.IsActive
-				? $"{product.Name} is now visible on the store."
-				: $"{product.Name} is now hidden from the store.";
+				? _L.Get("admin.msg.productVisible", ("name", product.Name))
+				: _L.Get("admin.msg.productHidden", ("name", product.Name));
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -216,7 +219,7 @@ namespace Talabat.Admin.Controllers
 
 			_unitOfWork.Repository<Product>().Delete(product);
 			await _unitOfWork.CompleteAsync();
-			TempData["Success"] = "Product deleted.";
+			TempData["Success"] = _L["admin.msg.productDeleted"];
 			return RedirectToAction(nameof(Index));
 		}
 

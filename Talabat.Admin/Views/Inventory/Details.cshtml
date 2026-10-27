@@ -1,23 +1,23 @@
 @model InventoryDetailsViewModel
 @{
-    ViewData["Title"] = $"Inventory · {Model.Name}";
+    ViewData["Title"] = $"{L["admin.inventory.title"]} · {Model.Name}";
 }
 
 <div class="stat-grid">
     <div class="stat-card ok">
-        <div class="label">Remaining</div>
+        <div class="label">@L["admin.inventory.remaining"]</div>
         <div class="value">@Model.Remaining</div>
     </div>
     <div class="stat-card brand">
-        <div class="label">Total added</div>
+        <div class="label">@L["admin.inventory.totalAdded"]</div>
         <div class="value">@Model.TotalAdded</div>
     </div>
     <div class="stat-card warn">
-        <div class="label">Total sold</div>
+        <div class="label">@L["admin.inventory.totalSold"]</div>
         <div class="value">@Model.TotalSold</div>
     </div>
     <div class="stat-card danger">
-        <div class="label">Adjusted out</div>
+        <div class="label">@L["admin.inventory.adjustedOut"]</div>
         <div class="value">@Model.TotalAdjustedOut</div>
     </div>
 </div>
@@ -34,23 +34,23 @@
                 }
             </p>
         </div>
-        <a class="btn btn-outline-secondary btn-sm" asp-action="Index">Back to inventory</a>
+        <a class="btn btn-outline-secondary btn-sm" asp-action="Index">@L["admin.inventory.back"]</a>
     </div>
     <div class="table-responsive">
         <table class="table align-middle mb-0">
             <thead>
                 <tr>
-                    <th>When</th>
-                    <th>Type</th>
-                    <th>Qty</th>
-                    <th>Stock after</th>
-                    <th>Note</th>
+                    <th>@L["admin.inventory.when"]</th>
+                    <th>@L["admin.inventory.type"]</th>
+                    <th>@L["admin.inventory.qty"]</th>
+                    <th>@L["admin.inventory.stockAfter"]</th>
+                    <th>@L["admin.inventory.note"]</th>
                 </tr>
             </thead>
             <tbody>
             @if (!Model.Movements.Any())
             {
-                <tr><td colspan="5" class="text-muted py-4 text-center">No stock movements yet.</td></tr>
+                <tr><td colspan="5" class="text-muted py-4 text-center">@L["admin.inventory.noMovements"]</td></tr>
             }
             else
             {
@@ -87,7 +87,7 @@
                             @m.Note
                             @if (m.OrderId.HasValue)
                             {
-                                <a class="table-link" asp-controller="Orders" asp-action="Details" asp-route-id="@m.OrderId">Order #@m.OrderId</a>
+                                <a class="table-link" asp-controller="Orders" asp-action="Details" asp-route-id="@m.OrderId">@L["admin.inventory.order"] #@m.OrderId</a>
                             }
                         </td>
                     </tr>

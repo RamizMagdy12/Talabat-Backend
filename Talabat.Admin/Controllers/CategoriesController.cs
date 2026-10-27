@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Talabat.Admin.Localization;
 using Talabat.Core;
 using Talabat.Core.Entities;
 
@@ -9,10 +10,12 @@ namespace Talabat.Admin.Controllers
 	public class CategoriesController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly SharedLocalizer _L;
 
-		public CategoriesController(IUnitOfWork unitOfWork)
+		public CategoriesController(IUnitOfWork unitOfWork, SharedLocalizer L)
 		{
 			_unitOfWork = unitOfWork;
+			_L = L;
 		}
 
 		public async Task<IActionResult> Index(string? q)
@@ -39,7 +42,7 @@ namespace Talabat.Admin.Controllers
 		{
 			if (string.IsNullOrWhiteSpace(model.Name))
 			{
-				ModelState.AddModelError(nameof(model.Name), "Name is required");
+				ModelState.AddModelError(nameof(model.Name), _L["admin.msg.nameRequired"]);
 				return View(model);
 			}
 
@@ -47,7 +50,7 @@ namespace Talabat.Admin.Controllers
 			model.NameAr = string.IsNullOrWhiteSpace(model.NameAr) ? null : model.NameAr.Trim();
 			await _unitOfWork.Repository<ProductCategory>().AddAsync(model);
 			await _unitOfWork.CompleteAsync();
-			TempData["Success"] = "Category created.";
+			TempData["Success"] = _L["admin.msg.categoryCreated"];
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -66,7 +69,7 @@ namespace Talabat.Admin.Controllers
 			if (id != model.Id) return BadRequest();
 			if (string.IsNullOrWhiteSpace(model.Name))
 			{
-				ModelState.AddModelError(nameof(model.Name), "Name is required");
+				ModelState.AddModelError(nameof(model.Name), _L["admin.msg.nameRequired"]);
 				return View(model);
 			}
 
@@ -77,7 +80,7 @@ namespace Talabat.Admin.Controllers
 			category.NameAr = string.IsNullOrWhiteSpace(model.NameAr) ? null : model.NameAr.Trim();
 			_unitOfWork.Repository<ProductCategory>().Update(category);
 			await _unitOfWork.CompleteAsync();
-			TempData["Success"] = "Category updated.";
+			TempData["Success"] = _L["admin.msg.categoryUpdated"];
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -90,7 +93,7 @@ namespace Talabat.Admin.Controllers
 
 			_unitOfWork.Repository<ProductCategory>().Delete(category);
 			await _unitOfWork.CompleteAsync();
-			TempData["Success"] = "Category deleted.";
+			TempData["Success"] = _L["admin.msg.categoryDeleted"];
 			return RedirectToAction(nameof(Index));
 		}
 	}

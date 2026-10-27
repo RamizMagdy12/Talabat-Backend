@@ -1,10 +1,10 @@
 @{
-    ViewData["Title"] = "Access Denied";
+    ViewData["Title"] = L["admin.access.title"];
     Layout = "_Layout";
 }
 
 <div class="login-card text-center">
-    <h1>Access Denied</h1>
-    <p class="subtitle">You need an Admin role to use this panel.</p>
-    <a class="btn btn-brand" asp-controller="Account" asp-action="Login">Back to Login</a>
+    <h1>@L["admin.access.title"]</h1>
+    <p class="subtitle">@L["admin.access.body"]</p>
+    <a class="btn btn-brand" asp-controller="Account" asp-action="Login">@L["admin.access.back"]</a>
 </div>

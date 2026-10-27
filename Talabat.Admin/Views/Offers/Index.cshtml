@@ -1,16 +1,16 @@
 @model IReadOnlyList<Product>
 @{
-    ViewData["Title"] = "Offers";
+    ViewData["Title"] = L["admin.offers.title"];
     ViewData["Search"] = ViewBag.Search as string;
-    ViewData["SearchPlaceholder"] = "Search products...";
+    ViewData["SearchPlaceholder"] = L["admin.offers.search"];
     var now = DateTime.UtcNow;
 }
 
 <div class="panel">
     <div class="panel-header">
         <div>
-            <h2>Offers</h2>
-            <p class="panel-sub">Set promo price and offer window for any product</p>
+            <h2>@L["admin.offers.title"]</h2>
+            <p class="panel-sub">@L["admin.offers.sub"]</p>
         </div>
         <partial name="_SearchBar" />
     </div>
@@ -19,18 +19,18 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Product</th>
-                    <th>Regular</th>
-                    <th>Offer</th>
-                    <th>Window</th>
-                    <th>Status</th>
+                    <th>@L["admin.offers.product"]</th>
+                    <th>@L["admin.offers.regular"]</th>
+                    <th>@L["admin.offers.offer"]</th>
+                    <th>@L["admin.offers.window"]</th>
+                    <th>@L["admin.offers.status"]</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
             @if (!Model.Any())
             {
-                <tr><td colspan="7" class="text-muted">No products found.</td></tr>
+                <tr><td colspan="7" class="text-muted">@L["admin.offers.noneFound"]</td></tr>
             }
             else
             {
@@ -59,29 +59,29 @@
                             }
                             else
                             {
-                                <span class="text-muted">No schedule</span>
+                                <span class="text-muted">@L["admin.offers.noSchedule"]</span>
                             }
                         </td>
                         <td>
                             @if (active)
                             {
-                                <span class="badge-status badge-prep">Active</span>
+                                <span class="badge-status badge-prep">@L["admin.common.active"]</span>
                             }
                             else if (scheduled)
                             {
-                                <span class="badge-status badge-pending">Scheduled</span>
+                                <span class="badge-status badge-pending">@L["admin.offers.scheduled"]</span>
                             }
                             else if (product.OfferEndUtc.HasValue && product.OfferEndUtc < now)
                             {
-                                <span class="badge-status badge-failed">Expired</span>
+                                <span class="badge-status badge-failed">@L["admin.offers.expired"]</span>
                             }
                             else
                             {
-                                <span class="badge-status badge-ship">None</span>
+                                <span class="badge-status badge-ship">@L["admin.common.none"]</span>
                             }
                         </td>
                         <td>
-                            <a class="btn btn-sm btn-brand" asp-action="Edit" asp-route-id="@product.Id">Manage</a>
+                            <a class="btn btn-sm btn-brand" asp-action="Edit" asp-route-id="@product.Id">@L["admin.offers.manage"]</a>
                         </td>
                     </tr>
                 }

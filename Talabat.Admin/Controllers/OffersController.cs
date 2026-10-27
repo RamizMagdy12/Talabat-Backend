@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Talabat.Admin.Localization;
 using Talabat.Admin.Models;
 using Talabat.Core;
 using Talabat.Core.Entities;
@@ -11,10 +12,12 @@ namespace Talabat.Admin.Controllers
 	public class OffersController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly SharedLocalizer _L;
 
-		public OffersController(IUnitOfWork unitOfWork)
+		public OffersController(IUnitOfWork unitOfWork, SharedLocalizer L)
 		{
 			_unitOfWork = unitOfWork;
+			_L = L;
 		}
 
 		public async Task<IActionResult> Index(string? q)
@@ -64,7 +67,7 @@ namespace Talabat.Admin.Controllers
 				product.OfferEndUtc = null;
 				_unitOfWork.Repository<Product>().Update(product);
 				await _unitOfWork.CompleteAsync();
-				TempData["Success"] = $"Offer cleared for {product.Name}.";
+				TempData["Success"] = _L.Get("admin.msg.offerCleared", ("name", product.Name));
 				return RedirectToAction(nameof(Index));
 			}
 
@@ -90,7 +93,7 @@ namespace Talabat.Admin.Controllers
 
 			_unitOfWork.Repository<Product>().Update(product);
 			await _unitOfWork.CompleteAsync();
-			TempData["Success"] = $"Offer saved for {product.Name}.";
+			TempData["Success"] = _L.Get("admin.msg.offerSaved", ("name", product.Name));
 			return RedirectToAction(nameof(Index));
 		}
 

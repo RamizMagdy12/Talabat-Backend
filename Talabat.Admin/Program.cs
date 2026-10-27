@@ -16,7 +16,7 @@ using Talabat.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<SharedLocalizer>();
+builder.Services.AddScoped<SharedLocalizer>();
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
 	// Culture (numbers/currency/dates) stays en-US; UI culture switches en/ar for strings.
