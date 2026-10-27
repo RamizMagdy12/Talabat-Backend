@@ -1,6 +1,9 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using Talabat.Admin.Localization;
 using Talabat.Core;
 using Talabat.Core.Entities.Identity;
 using Talabat.Core.Repositories.Contract;
@@ -13,6 +16,15 @@ using Talabat.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<SharedLocalizer>();
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+	var supported = new[] { new CultureInfo("en"), new CultureInfo("ar") };
+	options.DefaultRequestCulture = new RequestCulture("en");
+	options.SupportedCultures = supported;
+	options.SupportedUICultures = supported;
+	options.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider());
+});
 
 builder.Services.AddDbContext<StoreContext>(options =>
 {
@@ -86,6 +98,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseRequestLocalization();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

@@ -1,6 +1,6 @@
 @model InventoryIndexViewModel
 @{
-    ViewData["Title"] = "Inventory";
+    ViewData["Title"] = L["admin.inventory.title"];
     ViewData["Search"] = Model.Search;
     ViewData["SearchPlaceholder"] = "Search product or brand...";
 }
@@ -30,20 +30,20 @@
 
 <div class="panel">
     <div class="panel-header">
-        <h2>Stock ledger</h2>
-        <span class="text-muted" style="font-size:.85rem">Added / sold / remaining per product</span>
+        <h2>@L["admin.inventory.ledger"]</h2>
+        <span class="text-muted" style="font-size:.85rem">@L["admin.inventory.added"] / @L["admin.inventory.sold"] / @L["admin.inventory.remaining"]</span>
     </div>
     <partial name="_SearchBar" />
     <div class="table-responsive">
         <table class="table align-middle mb-0">
             <thead>
                 <tr>
-                    <th>Product</th>
-                    <th>Added</th>
-                    <th>Last in</th>
-                    <th>Sold</th>
-                    <th>Last sold</th>
-                    <th>Remaining</th>
+                    <th>@L["admin.nav.products"]</th>
+                    <th>@L["admin.inventory.added"]</th>
+                    <th>@L["admin.inventory.lastIn"]</th>
+                    <th>@L["admin.inventory.sold"]</th>
+                    <th>@L["admin.inventory.lastSold"]</th>
+                    <th>@L["admin.inventory.remaining"]</th>
                     <th></th>
                 </tr>
             </thead>
@@ -86,7 +86,7 @@
                             }
                         </td>
                         <td class="text-end">
-                            <a class="table-link" asp-action="Details" asp-route-id="@row.ProductId">History</a>
+                            <a class="table-link" asp-action="Details" asp-route-id="@row.ProductId">@L["admin.inventory.history"]</a>
                         </td>
                     </tr>
                 }

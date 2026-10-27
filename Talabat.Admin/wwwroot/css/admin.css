@@ -133,6 +133,11 @@ body {
   margin-bottom: 1.35rem;
 }
 
+.lang-switch-form {
+  margin-inline-start: auto;
+  flex-shrink: 0;
+}
+
 .topbar h1 {
   font-family: var(--font-display);
   font-size: clamp(1.45rem, 2.4vw, 1.85rem);
