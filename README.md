@@ -1,160 +1,108 @@
-# 🛒 Talabat API — E-Commerce Backend
+# Talabat 2026
 
-A production-oriented **ASP.NET Core Web API** powering a full-featured e-commerce platform with secure JWT authentication, Redis-backed baskets, and end-to-end **Stripe** payment processing. Buyer identity is resolved exclusively from **JWT claims**—never from query strings or request bodies—ensuring a consistent and secure order lifecycle.
+Full-stack e-commerce platform: **ASP.NET Core** backend (API + Admin) and **Angular** storefront, with bilingual **English / Arabic** UI.
 
----
+**[English](#english)** · **[العربية](#العربية)**
 
-## ✨ Core Features
+More detail in the nested docs:
 
-- 🔐 **JWT Authentication** — ASP.NET Core Identity with bearer tokens; buyer email resolved via `ClaimTypes.Email` for orders and payments
-- 🛍️ **Product Catalog** — Filterable, sortable, and paginated product queries using the Specification pattern
-- 🧺 **Redis Basket** — Persistent shopping baskets with live price synchronization
-- 📦 **Order Management** — Order creation, user-scoped retrieval, delivery methods, and status tracking (`Pending`, `PaymentReceived`, `PaymentFailed`)
-- 💳 **Stripe Payments** — PaymentIntent creation with automatic Stripe Customer registration and linking
-- 🔔 **Stripe Webhooks** — Anonymous webhook endpoint updates order status strictly by `PaymentIntentId` (no JWT required)
-- ⚡ **Response Caching** — Redis-backed caching for static/read-heavy endpoints with user-aware cache keys
-- 🏗️ **Clean Architecture** — Separation of concerns across API, Core, Services, and Repository layers
+- Backend API: [`Talabat.Solution.API/README.md`](Talabat.Solution.API/README.md)
+- Angular storefront: [`AngularTalabat/TalabatAngular/README.md`](AngularTalabat/TalabatAngular/README.md)
+- Shared i18n strings: [`Shared/Resources/README.md`](Shared/Resources/README.md)
 
 ---
 
-## 🧰 Tech Stack
+## English
 
-| Layer | Technology |
-|---|---|
-| **Runtime** | .NET 9.0 |
-| **Framework** | ASP.NET Core Web API |
-| **ORM** | Entity Framework Core 9 |
-| **Database** | SQL Server |
-| **Identity** | ASP.NET Core Identity |
-| **Cache / Basket Store** | Redis (StackExchange.Redis) |
-| **Payments** | Stripe.net |
-| **Mapping** | AutoMapper |
-| **Auth** | JWT Bearer Authentication |
+### Overview
 
-![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?style=flat-square&logo=dotnet)
-![EF Core](https://img.shields.io/badge/EF%20Core-9.0-512BD4?style=flat-square)
-![Stripe](https://img.shields.io/badge/Stripe-Payments-635BFF?style=flat-square&logo=stripe)
-![Redis](https://img.shields.io/badge/Redis-Cache-DC382D?style=flat-square&logo=redis)
-![SQL Server](https://img.shields.io/badge/SQL%20Server-Database-CC2927?style=flat-square&logo=microsoftsqlserver)
+Talabat 2026 is a food / retail style store with:
 
----
+- Public catalog (products, brands, categories, offers, bestsellers)
+- Redis-backed shopping basket
+- JWT auth, profile, and order history
+- Stripe card checkout (PaymentIntent + webhook)
+- Admin MVC dashboard (inventory ledger, orders, finance, users)
+- Shared AR/EN resource files for the store and the admin panel
 
-## 🏛️ Architecture & Design Patterns
+### Tech stack
 
-The solution follows **Clean Architecture** with four main projects:
+| Area | Technology |
+|------|------------|
+| Backend runtime | .NET 9 |
+| API | ASP.NET Core Web API + JWT Bearer |
+| Admin | ASP.NET Core MVC + cookie auth (`Admin` role) |
+| ORM / DB | EF Core 9 · SQL Server |
+| Cache / basket | Redis (StackExchange.Redis) |
+| Payments | Stripe.net · Stripe.js Elements |
+| Identity | ASP.NET Core Identity |
+| Frontend | Angular 20 (standalone) · TypeScript 5.9 · RxJS 7.8 |
+| UI | Bootstrap 5 · SweetAlert2 · Font Awesome |
+| i18n | Shared JSON (`Shared/Resources`) |
+
+### Repository structure
 
 ```
-Talabat.Solution.API/
-├── Talabat.API/          # Controllers, DTOs, Middleware, AutoMapper profiles
-├── Talabat.Core/         # Entities, Specifications, Repository & Service contracts
-├── Talabat.Services/     # Business logic (Orders, Payments, Products, Tokens)
-└── Talabat.Repository/   # EF Core DbContext, Generic Repository, Unit of Work
+Talabat2026/
+├── Talabat.Solution.API/          # .NET solution
+│   ├── Talabat.API/               # Public Web API
+│   ├── Talabat.Admin/             # Admin MVC panel
+│   ├── Talabat.Core/              # Entities, contracts, specs
+│   ├── Talabat.Services/          # Business logic
+│   └── Talabat.Repository/        # EF contexts, migrations, UoW
+├── AngularTalabat/
+│   └── TalabatAngular/            # Storefront
+└── Shared/
+    └── Resources/                 # en.json + ar.json (single source of truth)
 ```
 
-### Key Patterns
-
-| Pattern | Usage |
-|---|---|
-| **Repository Pattern** | `IGenericRepository<T>` abstracts data access for all entities |
-| **Unit of Work** | `IUnitOfWork` coordinates transactions across repositories |
-| **Specification Pattern** | Composable query specs (filtering, includes, sorting) — e.g. `OrderSpecifications` sorts by `OrderDate` descending |
-| **DTO Mapping** | AutoMapper maps entities ↔ API response models |
-| **Dependency Injection** | All services registered in `ApplicationServicesExtension` |
-
-### Security Model
-
-Authenticated endpoints resolve the buyer from the JWT token:
-
-```csharp
-var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
-```
-
-Orders and payment intents are always scoped to the authenticated user. The Stripe webhook is `[AllowAnonymous]` and updates orders by `PaymentIntentId` only.
-
----
-
-## 🔌 API Endpoints Overview
-
-Base URL: `https://localhost:7099/api`
-
-### 🔑 Account — `/api/account`
-
-| Method | Route | Auth | Description |
-|---|---|---|---|
-| `POST` | `/login` | ❌ | Authenticate and receive JWT |
-| `POST` | `/register` | ❌ | Register a new user |
-| `GET` | `/emailexists?email=` | ❌ | Check if email is already registered |
-
-### 🛍️ Products — `/api/product`
-
-| Method | Route | Auth | Description |
-|---|---|---|---|
-| `GET` | `/` | ❌ | Get paginated, filterable product list |
-| `GET` | `/{id}` | ❌ | Get product by ID |
-| `GET` | `/brands` | ❌ | Get all product brands |
-| `GET` | `/categories` | ❌ | Get all product categories |
-
-### 🧺 Basket — `/api/basket`
-
-| Method | Route | Auth | Description |
-|---|---|---|---|
-| `GET` | `/?basketid=` | ❌ | Get basket by ID (Redis) |
-| `POST` | `/` | ❌ | Create or update basket |
-| `DELETE` | `/?basketId=` | ❌ | Delete basket |
-
-### 📦 Orders — `/api/orders`
-
-| Method | Route | Auth | Description |
-|---|---|---|---|
-| `POST` | `/` | ✅ | Create order (buyer email from JWT) |
-| `GET` | `/` | ✅ | Get all orders for authenticated user (newest first) |
-| `GET` | `/{id}` | ✅ | Get order details by ID |
-| `GET` | `/deliveryMethod` | ❌ | Get available delivery methods |
-
-### 💳 Payments — `/api/payments`
-
-| Method | Route | Auth | Description |
-|---|---|---|---|
-| `POST` | `/{basketId}` | ✅ | Create/update Stripe PaymentIntent; registers Stripe Customer from JWT email |
-| `POST` | `/webhook` | ❌ | Stripe webhook — updates order status via `PaymentIntentId` |
-
----
-
-## 🚀 Getting Started
+Solution file: `Talabat.Solution.API/Talabat.Solution.API.sln`
 
 ### Prerequisites
 
 - [.NET 9 SDK](https://dotnet.microsoft.com/download)
 - [SQL Server](https://www.microsoft.com/sql-server) (LocalDB or full instance)
 - [Redis](https://redis.io/) running locally
-- [Stripe](https://stripe.com/) account (test mode)
-- [Stripe CLI](https://stripe.com/docs/stripe-cli) (recommended for local webhook testing)
+- [Node.js](https://nodejs.org/) 18+ and npm
+- [Angular CLI](https://angular.dev/tools/cli) 20+ (optional if you use `npx ng`)
+- Stripe account (test mode) and optionally [Stripe CLI](https://stripe.com/docs/stripe-cli)
+- SMTP credentials if you want order / forgot-password emails
 
-### 1. Clone the Repository
+### Default local ports
 
-```bash
-git clone https://github.com/your-username/talabat-api.git
-cd talabat-api
-```
+| App | HTTPS | HTTP |
+|-----|-------|------|
+| API | `https://localhost:7099` | `http://localhost:5121` |
+| Admin | `https://localhost:7100` | `http://localhost:5100` |
+| Angular | — | `http://localhost:4200` |
 
-### 2. Configure `appsettings.json`
+CORS on the API already allows `http://localhost:4200`.
 
-Update `Talabat.API/appsettings.json` with your local settings:
+### Configuration (keys only — do not commit real secrets)
+
+**API** — `Talabat.Solution.API/Talabat.API/appsettings.json` (prefer [User Secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) in real use):
 
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=.;Database=TalabatDatabase;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;",
-    "IdentityConnection": "Server=.;Database=TalabatDatabaseIdentity;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;",
+    "DefaultConnection": "Server=localhost;Database=TalabatDatabase;Trusted_Connection=True;TrustServerCertificate=True;",
+    "IdentityConnection": "Server=localhost;Database=TalabatDatabaseIdentity;Trusted_Connection=True;TrustServerCertificate=True;",
     "Redis": "localhost"
   },
   "JWT": {
-    "key": "YourSuperSecretKeyAtLeast32CharactersLong!",
+    "key": "<at-least-32-char-secret>",
     "validIssure": "https://localhost:7099",
     "validAudience": "MySecretApiUser",
     "DurationInDays": 30
   },
   "ApiBaseUrl": "https://localhost:7099",
+  "EmailSettings": {
+    "SmtpHost": "smtp.gmail.com",
+    "SmtpPort": "587",
+    "FromEmail": "<your-email>",
+    "FromName": "Talabat Store",
+    "AppPassword": "<smtp-app-password>"
+  },
   "StripeSettings": {
     "PublishableKey": "pk_test_...",
     "SecretKey": "sk_test_...",
@@ -163,68 +111,346 @@ Update `Talabat.API/appsettings.json` with your local settings:
 }
 ```
 
-> ⚠️ **Never commit real API keys.** Use [User Secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) or environment variables in production.
+**Admin** — `Talabat.Solution.API/Talabat.Admin/appsettings.json`: same connection / JWT / Stripe / `ApiBaseUrl` ideas, plus product images path where configured.
 
-### 3. Apply Database Migrations
+**Angular** — `AngularTalabat/TalabatAngular/src/environments/environment.ts`:
 
-```bash
-cd Talabat.API
-dotnet ef database update --project ../Talabat.Repository
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'https://localhost:7099/api/',
+  stripePublishableKey: 'pk_test_...'
+};
 ```
 
-This creates the store and identity databases and seeds initial product/delivery data.
+> Never commit live passwords, JWT keys, or Stripe secret / webhook secrets.
 
-### 4. Run the API
+### Run — Backend API
 
 ```bash
+cd Talabat.Solution.API/Talabat.API
+dotnet ef database update --project ../Talabat.Repository
 dotnet run --launch-profile https
 ```
 
-The API will be available at:
+- Swagger / API base: `https://localhost:7099`
+- REST base path: `https://localhost:7099/api`
 
-- **HTTPS:** `https://localhost:7099`
-- **HTTP:** `http://localhost:5121`
+### Run — Admin panel
 
-### 5. Forward Stripe Webhooks (Local Development)
+```bash
+cd Talabat.Solution.API/Talabat.Admin
+dotnet run --launch-profile https
+```
 
-In a separate terminal:
+Open `https://localhost:7100`. Sign in with an Identity user that has the **Admin** role.
+
+Language toggle (EN / AR) uses a culture cookie; UI strings load from `wwwroot/resources/{en|ar}.json`.
+
+### Run — Angular storefront
+
+```bash
+cd AngularTalabat/TalabatAngular
+npm install
+ng serve
+```
+
+Open `http://localhost:4200`.
+
+Production build:
+
+```bash
+ng build
+```
+
+Output: `dist/TalabatAngular/browser/`.
+
+### Stripe webhook (local)
 
 ```bash
 stripe listen --forward-to https://localhost:7099/api/payments/webhook
 ```
 
-Copy the webhook signing secret (`whsec_...`) into `StripeSettings:WebhookSecret` in `appsettings.json`.
+Put the printed `whsec_...` into `StripeSettings:WebhookSecret`.
 
----
+### API endpoints (overview)
 
-## 🔄 Payment & Order Lifecycle
+Base: `https://localhost:7099/api`
+
+| Area | Examples |
+|------|----------|
+| Account | `POST /account/login`, `POST /account/register`, profile GET/PUT, change password, forgot password |
+| Products | `GET /product`, `GET /product/{id}`, brands, categories, offers, bestsellers |
+| Basket | `GET/POST/DELETE /basket` (Redis) |
+| Orders | `POST/GET /orders`, `GET /orders/{id}`, `GET /orders/deliveryMethod` (buyer from JWT) |
+| Payments | `POST /payments/{basketId}`, `POST /payments/webhook` |
+
+Buyer email for orders/payments is taken from the JWT — not from query strings.
+
+### Admin modules
+
+Dashboard · Products · Brands · Categories · Offers · Inventory (stock ledger) · Orders · Finance · Users · Language switch.
+
+### Angular routes
+
+| Path | Auth | Description |
+|------|------|-------------|
+| `/products`, `/products/:id` | No | Catalog & details |
+| `/basket`, `/checkout` | Yes | Basket & 4-step checkout |
+| `/orders`, `/orders/:id` | Yes | History & timeline |
+| `/account/login`, `/register`, `/forgot-password`, `/profile` | Mixed | Auth & profile |
+
+### Bilingual UI (AR / EN)
+
+Single source of truth: `Shared/Resources/en.json` and `ar.json`.
+
+Sync into both apps after edits:
+
+```bash
+cp Shared/Resources/*.json Talabat.Solution.API/Talabat.Admin/wwwroot/resources/
+cp Shared/Resources/*.json AngularTalabat/TalabatAngular/public/i18n/
+```
+
+- Angular: `{{ 'nav.shop' | t }}` / `I18nService`
+- Admin Razor: `@L["admin.nav.dashboard"]`
+
+Catalog fields also support bilingual product/brand/category names (`Name` / `NameAr`, etc.).
+
+### Payment & order flow
 
 ```
-1. Client authenticates          →  JWT issued with email claim
-2. Client adds items to basket   →  Stored in Redis
-3. Client starts checkout        →  POST /api/payments/{basketId}
-                                   →  Stripe Customer created/found by email
-                                   →  PaymentIntent linked to Customer
-4. Client confirms card payment  →  Stripe processes payment
-5. Order is created              →  POST /api/orders (email from JWT)
-                                   →  Status set to PaymentReceived if intent succeeded
-6. Stripe webhook fires          →  POST /api/payments/webhook
-                                   →  Order status updated by PaymentIntentId
+Login (JWT) → Basket (Redis) → Checkout address/delivery
+→ POST /payments/{basketId} (PaymentIntent)
+→ Stripe confirm card → POST /orders
+→ Webhook updates status by PaymentIntentId
 ```
 
----
+### Architecture notes
 
-## 📁 Solution Structure
+Clean-ish layered backend: API/Admin hosts → Services → Repository → SQL Server / Redis. Specification pattern for product/order queries; Unit of Work for commits. Angular uses standalone components, JWT interceptor, and route guards.
 
-| Project | Responsibility |
-|---|---|
-| `Talabat.API` | HTTP layer, controllers, middleware, DTOs, caching attributes |
-| `Talabat.Core` | Domain entities, specifications, interfaces |
-| `Talabat.Services` | Order, payment, product, and token business logic |
-| `Talabat.Repository` | EF Core contexts, migrations, repository implementations |
+### License
+
+Part of the Talabat e-commerce portfolio. All rights reserved.
 
 ---
 
-## 📄 License
+## العربية
 
-This project is part of the **Talabat E-Commerce** portfolio. All rights reserved.
+### نظرة عامة
+
+**طلباتي 2026** منصة تجارة إلكترونية متكاملة تشمل:
+
+- كتالوج عام (منتجات، علامات، تصنيفات، عروض، الأكثر مبيعًا)
+- سلة محفوظة على Redis
+- مصادقة JWT، ملف شخصي، وسجل طلبات
+- دفع ببطاقة عبر Stripe (PaymentIntent + Webhook)
+- لوحة أدمن MVC (جرد المخزون، الطلبات، المالية، المستخدمون)
+- واجهة ثنائية اللغة عربي / إنجليزي للمتجر ولوحة التحكم
+
+### التقنيات
+
+| الجزء | التقنية |
+|------|---------|
+| الباكند | .NET 9 |
+| الـ API | ASP.NET Core Web API + JWT |
+| الأدمن | ASP.NET Core MVC + كوكي (`Admin`) |
+| قاعدة البيانات | EF Core 9 · SQL Server |
+| الكاش / السلة | Redis |
+| الدفع | Stripe.net · Stripe Elements |
+| الهوية | ASP.NET Core Identity |
+| الفرونت | Angular 20 · TypeScript 5.9 · RxJS |
+| الواجهة | Bootstrap 5 · SweetAlert2 |
+| الترجمة | ملفات JSON مشتركة في `Shared/Resources` |
+
+### هيكل المستودع
+
+```
+Talabat2026/
+├── Talabat.Solution.API/          # حل .NET
+│   ├── Talabat.API/               # الـ API العام
+│   ├── Talabat.Admin/             # لوحة الأدمن
+│   ├── Talabat.Core/
+│   ├── Talabat.Services/
+│   └── Talabat.Repository/
+├── AngularTalabat/
+│   └── TalabatAngular/            # واجهة المتجر
+└── Shared/
+    └── Resources/                 # en.json + ar.json
+```
+
+ملف الحل: `Talabat.Solution.API/Talabat.Solution.API.sln`
+
+### المتطلبات
+
+- SDK لـ .NET 9
+- SQL Server
+- Redis محلي
+- Node.js 18+ و npm
+- Angular CLI 20+ (اختياري مع `npx ng`)
+- حساب Stripe (وضع تجريبي) ويفضّل Stripe CLI
+- إعدادات SMTP إن أردت رسائل البريد (طلب / نسيت كلمة المرور)
+
+### المنافذ الافتراضية محليًا
+
+| التطبيق | HTTPS | HTTP |
+|---------|-------|------|
+| API | `https://localhost:7099` | `http://localhost:5121` |
+| الأدمن | `https://localhost:7100` | `http://localhost:5100` |
+| Angular | — | `http://localhost:4200` |
+
+الـ CORS في الـ API يسمح بـ `http://localhost:4200`.
+
+### الإعداد (مفاتيح فقط — لا ترفع أسرارًا حقيقية)
+
+**الـ API** — `Talabat.Solution.API/Talabat.API/appsettings.json` (يفضّل User Secrets):
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=TalabatDatabase;Trusted_Connection=True;TrustServerCertificate=True;",
+    "IdentityConnection": "Server=localhost;Database=TalabatDatabaseIdentity;Trusted_Connection=True;TrustServerCertificate=True;",
+    "Redis": "localhost"
+  },
+  "JWT": {
+    "key": "<مفتاح-سري-32-حرف-على-الأقل>",
+    "validIssure": "https://localhost:7099",
+    "validAudience": "MySecretApiUser",
+    "DurationInDays": 30
+  },
+  "ApiBaseUrl": "https://localhost:7099",
+  "EmailSettings": {
+    "SmtpHost": "smtp.gmail.com",
+    "SmtpPort": "587",
+    "FromEmail": "<بريدك>",
+    "FromName": "Talabat Store",
+    "AppPassword": "<كلمة-مرور-التطبيق>"
+  },
+  "StripeSettings": {
+    "PublishableKey": "pk_test_...",
+    "SecretKey": "sk_test_...",
+    "WebhookSecret": "whsec_..."
+  }
+}
+```
+
+**الأدمن** — نفس فكرة سلاسل الاتصال و JWT و Stripe و `ApiBaseUrl` في `Talabat.Admin/appsettings.json`.
+
+**Angular** — `src/environments/environment.ts`:
+
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'https://localhost:7099/api/',
+  stripePublishableKey: 'pk_test_...'
+};
+```
+
+> لا ترفع كلمات المرور أو مفاتيح JWT أو أسرار Stripe إلى Git.
+
+### التشغيل — الـ API
+
+```bash
+cd Talabat.Solution.API/Talabat.API
+dotnet ef database update --project ../Talabat.Repository
+dotnet run --launch-profile https
+```
+
+- العنوان: `https://localhost:7099`
+- مسار الـ REST: `https://localhost:7099/api`
+
+### التشغيل — لوحة الأدمن
+
+```bash
+cd Talabat.Solution.API/Talabat.Admin
+dotnet run --launch-profile https
+```
+
+افتح `https://localhost:7100` وسجّل دخول بمستخدم لديه دور **Admin**.
+
+تبديل اللغة (عربي / إنجليزي) عبر كوكي الثقافة؛ النصوص من `wwwroot/resources/{en|ar}.json`.
+
+### التشغيل — متجر Angular
+
+```bash
+cd AngularTalabat/TalabatAngular
+npm install
+ng serve
+```
+
+افتح `http://localhost:4200`.
+
+بناء للإنتاج:
+
+```bash
+ng build
+```
+
+المخرجات في `dist/TalabatAngular/browser/`.
+
+### Webhook لـ Stripe محليًا
+
+```bash
+stripe listen --forward-to https://localhost:7099/api/payments/webhook
+```
+
+ضع `whsec_...` في `StripeSettings:WebhookSecret`.
+
+### نظرة على نقاط الـ API
+
+الأساس: `https://localhost:7099/api`
+
+| القسم | أمثلة |
+|------|--------|
+| الحساب | تسجيل دخول / تسجيل / الملف / نسيت كلمة المرور |
+| المنتجات | قائمة، تفاصيل، علامات، تصنيفات، عروض، الأكثر مبيعًا |
+| السلة | جلب / حفظ / حذف (Redis) |
+| الطلبات | إنشاء وجلب (البريد من JWT) وطرق التوصيل |
+| الدفع | PaymentIntent + Webhook |
+
+بريد المشتري للطلبات والدفع يُستخرج من الـ JWT وليس من الـ query string.
+
+### أقسام الأدمن
+
+لوحة التحكم · المنتجات · العلامات · التصنيفات · العروض · الجرد · الطلبات · المالية · المستخدمون · تبديل اللغة.
+
+### مسارات Angular
+
+| المسار | حماية | الوصف |
+|--------|-------|--------|
+| `/products`, `/products/:id` | لا | الكتالوج والتفاصيل |
+| `/basket`, `/checkout` | نعم | السلة وإتمام الشراء (4 خطوات) |
+| `/orders`, `/orders/:id` | نعم | الطلبات والجدول الزمني |
+| `/account/*` | حسب الصفحة | دخول، تسجيل، نسيت كلمة المرور، الملف |
+
+### الواجهة ثنائية اللغة
+
+المصدر الواحد: `Shared/Resources/en.json` و `ar.json`.
+
+بعد التعديل انسخ للمشروعين:
+
+```bash
+cp Shared/Resources/*.json Talabat.Solution.API/Talabat.Admin/wwwroot/resources/
+cp Shared/Resources/*.json AngularTalabat/TalabatAngular/public/i18n/
+```
+
+- Angular: `{{ 'nav.shop' | t }}`
+- الأدمن: `@L["admin.nav.dashboard"]`
+
+أسماء المنتجات والعلامات والتصنيفات تدعم حقول عربي/إنجليزي (`Name` / `NameAr` إلخ).
+
+### تدفق الدفع والطلب
+
+```
+تسجيل الدخول (JWT) → السلة (Redis) → عنوان وطريقة التوصيل
+→ إنشاء PaymentIntent → تأكيد البطاقة في Stripe
+→ إنشاء الطلب → الـ Webhook يحدّث الحالة عبر PaymentIntentId
+```
+
+### ملاحظات معمارية
+
+طبقات: المضيفات (API/Admin) ← الخدمات ← المستودع ← SQL Server / Redis. نمط المواصفات (Specification) للاستعلامات، و Unit of Work للحفظ. Angular بمكونات standalone، interceptor للـ JWT، وـ guards للمسارات المحمية.
+
+### الترخيص
+
+جزء من محفظة مشروع طلباتي للتجارة الإلكترونية. جميع الحقوق محفوظة.
