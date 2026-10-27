@@ -13,6 +13,7 @@ namespace Talabat.Admin.Models
 		public int DeliveredOrders { get; set; }
 		public int OrdersToday { get; set; }
 		public int OrdersThisMonth { get; set; }
+		public int ActiveOffers { get; set; }
 		public IReadOnlyList<Order> RecentOrders { get; set; } = Array.Empty<Order>();
 	}
 }

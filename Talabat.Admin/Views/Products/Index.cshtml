@@ -22,8 +22,9 @@
                     <th>Brand</th>
                     <th>Category</th>
                     <th>Price</th>
+                    <th>Offer</th>
                     <th>Stock</th>
-                    <th style="width:180px">Actions</th>
+                    <th style="width:220px">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,6 +37,16 @@
                     <td>@product.productCategory?.Name</td>
                     <td>@product.Price.ToString("C")</td>
                     <td>
+                        @if (product.IsOfferActive())
+                        {
+                            <span class="badge-status badge-prep">@product.OfferPrice!.Value.ToString("C")</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">—</span>
+                        }
+                    </td>
+                    <td>
                         @if (product.Stock <= 10)
                         {
                             <span class="badge-status badge-low">@product.Stock</span>
@@ -45,8 +56,9 @@
                             @product.Stock
                         }
                     </td>
-                    <td class="d-flex gap-2">
+                    <td class="d-flex gap-2 flex-wrap">
                         <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@product.Id">Edit</a>
+                        <a class="btn btn-sm btn-brand" asp-controller="Offers" asp-action="Edit" asp-route-id="@product.Id">Offer</a>
                         <form asp-action="Delete" asp-route-id="@product.Id" method="post" onsubmit="return confirm('Delete this product?');">
                             @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>

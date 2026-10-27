@@ -12,5 +12,7 @@ namespace Talabat.Core.Services.Contract
         Task<IReadOnlyList<ProductBrand>> GetBrandsAsync();
         Task<IReadOnlyList<ProductCategory>> GetCategoriesAsync();
         Task<int> GetCountAsync(ProductSpecParams specParams);
+        Task<IReadOnlyList<Product>> GetActiveOffersAsync();
+        Task<IReadOnlyList<Product>> GetBestSellersAsync(int count = 8);
     }
 }

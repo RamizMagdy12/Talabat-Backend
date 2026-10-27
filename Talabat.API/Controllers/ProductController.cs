@@ -16,6 +16,7 @@ public class ProductController : BaseAPIController
 		_productService = productService;
 		_mapper = mapper;
 	}
+
 	[Cached]
 	[HttpGet]
 	public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery] ProductSpecParams parameters)
@@ -32,19 +33,7 @@ public class ProductController : BaseAPIController
 			mapped
 		));
 	}
-	[Cached]
-	[HttpGet("{id}")]
-	public async Task<ActionResult<ProductToReturnDto>> GetProductById(int id)
-	{
-		var product = await _productService.GetProductAsync(id);
 
-		if (product == null)
-			return NotFound(new { Message = "Not Found", StatusCode = 404 });
-
-		var mapped = _mapper.Map<ProductToReturnDto>(product);
-
-		return Ok(mapped);
-	}
 	[Cached]
 	[HttpGet("brands")]
 	public async Task<ActionResult<IEnumerable<BrandToReturnDto>>> GetBrands()
@@ -54,12 +43,41 @@ public class ProductController : BaseAPIController
 
 		return Ok(mapped);
 	}
+
 	[Cached]
 	[HttpGet("categories")]
 	public async Task<ActionResult<IEnumerable<CategoryToReturnDto>>> GetCategories()
 	{
 		var categories = await _productService.GetCategoriesAsync();
 		var mapped = _mapper.Map<IEnumerable<CategoryToReturnDto>>(categories);
+
+		return Ok(mapped);
+	}
+
+	[HttpGet("offers")]
+	public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetOffers()
+	{
+		var products = await _productService.GetActiveOffersAsync();
+		return Ok(_mapper.Map<IReadOnlyList<ProductToReturnDto>>(products));
+	}
+
+	[HttpGet("bestsellers")]
+	public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetBestSellers([FromQuery] int count = 8)
+	{
+		var products = await _productService.GetBestSellersAsync(count);
+		return Ok(_mapper.Map<IReadOnlyList<ProductToReturnDto>>(products));
+	}
+
+	[Cached]
+	[HttpGet("{id:int}")]
+	public async Task<ActionResult<ProductToReturnDto>> GetProductById(int id)
+	{
+		var product = await _productService.GetProductAsync(id);
+
+		if (product == null)
+			return NotFound(new { Message = "Not Found", StatusCode = 404 });
+
+		var mapped = _mapper.Map<ProductToReturnDto>(product);
 
 		return Ok(mapped);
 	}

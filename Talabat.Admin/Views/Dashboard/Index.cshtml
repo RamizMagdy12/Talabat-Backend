@@ -4,55 +4,88 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="stat-grid">
-    <div class="stat-card brand">
-        <div class="label">Products</div>
-        <div class="value">@Model.TotalProducts</div>
+<section class="dash-hero">
+    <div class="dash-hero__copy">
+        <p class="dash-kicker">Talabat Admin</p>
+        <h2>Operations overview</h2>
+        <p class="dash-hero__sub">Track inventory, order flow, and delivery status in one place.</p>
     </div>
-    <div class="stat-card warn">
-        <div class="label">Low Stock (≤10)</div>
-        <div class="value">@Model.LowStockCount</div>
+    <div class="dash-hero__actions">
+        <a class="btn btn-brand" asp-controller="Offers" asp-action="Index">Manage offers</a>
+        <a class="btn btn-outline-dark" asp-controller="Products" asp-action="Create">Add product</a>
+        <a class="btn btn-outline-dark" asp-controller="Orders" asp-action="Index">Manage orders</a>
     </div>
-    <div class="stat-card danger">
-        <div class="label">Orders Today</div>
-        <div class="value">@Model.OrdersToday</div>
-    </div>
-    <div class="stat-card ok">
-        <div class="label">Orders This Month</div>
-        <div class="value">@Model.OrdersThisMonth</div>
-    </div>
-</div>
+</section>
 
 <div class="stat-grid">
-    <div class="stat-card">
-        <div class="label">Pending</div>
-        <div class="value">@Model.PendingOrders</div>
-    </div>
-    <div class="stat-card brand">
-        <div class="label">Paid</div>
-        <div class="value">@Model.PaidOrders</div>
-    </div>
-    <div class="stat-card warn">
-        <div class="label">Preparing</div>
-        <div class="value">@Model.PreparingOrders</div>
-    </div>
-    <div class="stat-card danger">
-        <div class="label">Out For Delivery</div>
-        <div class="value">@Model.OutForDeliveryOrders</div>
-    </div>
+    <article class="stat-card brand">
+        <div class="stat-card__icon" aria-hidden="true">P</div>
+        <div>
+            <div class="label">Products</div>
+            <div class="value">@Model.TotalProducts</div>
+        </div>
+    </article>
+    <article class="stat-card warn">
+        <div class="stat-card__icon" aria-hidden="true">!</div>
+        <div>
+            <div class="label">Low Stock (≤10)</div>
+            <div class="value">@Model.LowStockCount</div>
+        </div>
+    </article>
+    <article class="stat-card danger">
+        <div class="stat-card__icon" aria-hidden="true">%</div>
+        <div>
+            <div class="label">Active Offers</div>
+            <div class="value">@Model.ActiveOffers</div>
+        </div>
+    </article>
+    <article class="stat-card ok">
+        <div class="stat-card__icon" aria-hidden="true">T</div>
+        <div>
+            <div class="label">Orders Today</div>
+            <div class="value">@Model.OrdersToday</div>
+        </div>
+    </article>
 </div>
 
-<div class="stat-grid" style="grid-template-columns: repeat(1, minmax(0, 220px)); margin-top: -0.5rem;">
-    <div class="stat-card ok">
-        <div class="label">Delivered</div>
-        <div class="value">@Model.DeliveredOrders</div>
+<section class="pipeline-panel">
+    <div class="panel-header">
+        <div>
+            <h2>Order pipeline</h2>
+            <p class="panel-sub">Live status breakdown</p>
+        </div>
     </div>
-</div>
+    <div class="pipeline-grid">
+        <div class="pipeline-card">
+            <span class="pipeline-card__label">Pending</span>
+            <strong>@Model.PendingOrders</strong>
+        </div>
+        <div class="pipeline-card pipeline-card--paid">
+            <span class="pipeline-card__label">Paid</span>
+            <strong>@Model.PaidOrders</strong>
+        </div>
+        <div class="pipeline-card pipeline-card--prep">
+            <span class="pipeline-card__label">Preparing</span>
+            <strong>@Model.PreparingOrders</strong>
+        </div>
+        <div class="pipeline-card pipeline-card--ship">
+            <span class="pipeline-card__label">Out for delivery</span>
+            <strong>@Model.OutForDeliveryOrders</strong>
+        </div>
+        <div class="pipeline-card pipeline-card--done">
+            <span class="pipeline-card__label">Delivered</span>
+            <strong>@Model.DeliveredOrders</strong>
+        </div>
+    </div>
+</section>
 
 <div class="panel">
     <div class="panel-header">
-        <h2>Recent Orders</h2>
-        <a class="btn btn-sm btn-outline-primary" asp-controller="Orders" asp-action="Index">View all</a>
+        <div>
+            <h2>Recent orders</h2>
+            <p class="panel-sub">Latest customer activity</p>
+        </div>
+        <a class="btn btn-sm btn-brand" asp-controller="Orders" asp-action="Index">View all</a>
     </div>
     <div class="table-responsive">
         <table class="table align-middle mb-0">
@@ -76,7 +109,7 @@
                 foreach (var order in Model.RecentOrders)
                 {
                     <tr>
-                        <td>@order.Id</td>
+                        <td><strong class="order-id">#@order.Id</strong></td>
                         <td>@order.BuyerEmail</td>
                         <td>@order.OrderDate.ToLocalTime().ToString("g")</td>
                         <td>
@@ -84,8 +117,8 @@
                                 @OrderStatusHelper.DisplayName(order.Status)
                             </span>
                         </td>
-                        <td>@order.GetTotal().ToString("C")</td>
-                        <td><a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">Details</a></td>
+                        <td class="money-cell">@order.GetTotal().ToString("C")</td>
+                        <td><a class="table-link" asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">Details</a></td>
                     </tr>
                 }
             }

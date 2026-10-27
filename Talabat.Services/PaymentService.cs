@@ -55,9 +55,10 @@ namespace Talabat.Services
 				foreach (var item in basket.Items)
 				{
 					var product = await _unitOfWork.Repository<Core.Entities.Product>().GetAsync(item.Id);
-					if (item.Price != product?.Price) {
-						item.Price = product.Price;
-					}
+					if (product == null) continue;
+					var effective = product.GetEffectivePrice();
+					if (item.Price != effective)
+						item.Price = effective;
 				}
 			}
 			var amount = (long)basket.Items.Sum(i => i.Quantity * i.Price * 100) + (long)ShippingPrice * 100;

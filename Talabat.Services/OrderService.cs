@@ -54,7 +54,7 @@ namespace Talabat.Services
 				  productRepo.Update(product);
 
 				  var productItemOrdered = new ProductItemOrdered(item.Id, product.Name, product.PictureUrl);
-				  var orderItem = new OrderItem(productItemOrdered, product.Price, item.Quantity);
+				  var orderItem = new OrderItem(productItemOrdered, product.GetEffectivePrice(), item.Quantity);
 				  orderItems.Add(orderItem);
 				}
 			}

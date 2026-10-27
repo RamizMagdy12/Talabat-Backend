@@ -13,9 +13,30 @@ namespace Talabat.Core.Entities
         public string PictureUrl { get; set; }
         public decimal Price { get; set; }
         public int Stock { get; set; }
+
+        /// <summary>Promotional price while the offer window is active.</summary>
+        public decimal? OfferPrice { get; set; }
+        public DateTime? OfferStartUtc { get; set; }
+        public DateTime? OfferEndUtc { get; set; }
+
         public int BrandId { get; set; }
         public ProductBrand ProductBrand { get; set; }
         public int categoryId { get; set; }
         public ProductCategory productCategory { get; set; }
+
+        public bool IsOfferActive(DateTime? utcNow = null)
+        {
+            var now = utcNow ?? DateTime.UtcNow;
+            return OfferPrice.HasValue
+                && OfferPrice.Value > 0
+                && OfferPrice.Value < Price
+                && OfferStartUtc.HasValue
+                && OfferEndUtc.HasValue
+                && OfferStartUtc.Value <= now
+                && OfferEndUtc.Value >= now;
+        }
+
+        public decimal GetEffectivePrice(DateTime? utcNow = null)
+            => IsOfferActive(utcNow) ? OfferPrice!.Value : Price;
     }
 }

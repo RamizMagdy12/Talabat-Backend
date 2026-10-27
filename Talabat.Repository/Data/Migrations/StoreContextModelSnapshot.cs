@@ -230,6 +230,15 @@ namespace Talabat.Repository.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal?>("OfferPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("OfferEndUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("OfferStartUtc")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 

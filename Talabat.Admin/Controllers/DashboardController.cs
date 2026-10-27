@@ -41,6 +41,7 @@ namespace Talabat.Admin.Controllers
 				DeliveredOrders = orders.Count(o => o.Status == OrderStatus.Delivered),
 				OrdersToday = orders.Count(o => o.OrderDate >= todayUtcStart && o.OrderDate < tomorrowUtcStart),
 				OrdersThisMonth = orders.Count(o => o.OrderDate >= monthStartUtc),
+				ActiveOffers = products.Count(p => p.IsOfferActive()),
 				RecentOrders = orders.Take(8).ToList()
 			};
 

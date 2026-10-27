@@ -1,0 +1,67 @@
+@model OfferFormViewModel
+@{
+    ViewData["Title"] = "Manage Offer";
+    var apiBase = (Configuration["ApiBaseUrl"] ?? "").TrimEnd('/');
+    var previewUrl = string.IsNullOrWhiteSpace(Model.PictureUrl)
+        ? null
+        : (Model.PictureUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+            ? Model.PictureUrl
+            : $"{apiBase}/{Model.PictureUrl.TrimStart('/')}");
+}
+
+<div class="panel" style="max-width:720px">
+    <div class="panel-header">
+        <div>
+            <h2>@Model.ProductName</h2>
+            <p class="panel-sub">Regular price: <strong>@Model.RegularPrice.ToString("C")</strong></p>
+        </div>
+        @if (previewUrl != null)
+        {
+            <div class="image-preview-wrap" style="width:72px;height:72px">
+                <img src="@previewUrl" alt="@Model.ProductName" class="image-preview" />
+            </div>
+        }
+    </div>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="ProductId" />
+        <input type="hidden" asp-for="ProductName" />
+        <input type="hidden" asp-for="RegularPrice" />
+        <input type="hidden" asp-for="PictureUrl" />
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="OfferPrice" class="form-label"></label>
+                <input asp-for="OfferPrice" class="form-control" step="0.01" />
+                <span asp-validation-for="OfferPrice" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="OfferStartLocal" class="form-label"></label>
+                <input name="OfferStartLocal" class="form-control" type="datetime-local"
+                       value="@(Model.OfferStartLocal?.ToString("yyyy-MM-ddTHH:mm"))" />
+                <span asp-validation-for="OfferStartLocal" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="OfferEndLocal" class="form-label"></label>
+                <input name="OfferEndLocal" class="form-control" type="datetime-local"
+                       value="@(Model.OfferEndLocal?.ToString("yyyy-MM-ddTHH:mm"))" />
+                <span asp-validation-for="OfferEndLocal" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <div class="form-check">
+                    <input asp-for="ClearOffer" class="form-check-input" />
+                    <label asp-for="ClearOffer" class="form-check-label">Clear offer (remove promo)</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-brand">Save offer</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Back</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
