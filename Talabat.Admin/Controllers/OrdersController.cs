@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Talabat.Admin.Helpers;
+using Talabat.Core.Entities.Identity;
 using Talabat.Core.Entities.Order_Aggregate;
 using Talabat.Core.Services.Contract;
 
@@ -10,10 +12,12 @@ namespace Talabat.Admin.Controllers
 	public class OrdersController : Controller
 	{
 		private readonly IOrderService _orderService;
+		private readonly UserManager<AppUser> _userManager;
 
-		public OrdersController(IOrderService orderService)
+		public OrdersController(IOrderService orderService, UserManager<AppUser> userManager)
 		{
 			_orderService = orderService;
+			_userManager = userManager;
 		}
 
 		public async Task<IActionResult> Index(string? q, OrderStatus? status)
@@ -42,6 +46,15 @@ namespace Talabat.Admin.Controllers
 		{
 			var order = await _orderService.GetOrderByIdAsync(id);
 			if (order == null) return NotFound();
+
+			var phone = order.ShippingAddress?.PhoneNumber;
+			if (string.IsNullOrWhiteSpace(phone) && !string.IsNullOrWhiteSpace(order.BuyerEmail))
+			{
+				var buyer = await _userManager.FindByEmailAsync(order.BuyerEmail);
+				phone = buyer?.PhoneNumber;
+			}
+
+			ViewBag.BuyerPhone = phone ?? string.Empty;
 			return View(order);
 		}
 

@@ -93,7 +93,7 @@ namespace Talabat.API.Controllers
 		}
 
 		[Authorize]
-		[HttpGet]
+		[HttpGet("profile")]
 		public async Task<ActionResult<ProfileDto>> GetCurrentUser()
 		{
 			var user = await GetUserWithAddressAsync();
@@ -102,7 +102,8 @@ namespace Talabat.API.Controllers
 		}
 
 		[Authorize]
-		[HttpPut]
+		[HttpPut("profile")]
+		[HttpPost("profile")]
 		public async Task<ActionResult<ProfileDto>> UpdateProfile(UpdateProfileDto model)
 		{
 			var user = await GetUserWithAddressAsync();

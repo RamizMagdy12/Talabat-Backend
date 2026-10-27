@@ -44,6 +44,8 @@
             <dl class="mb-0">
                 <dt>Buyer</dt>
                 <dd>@Model.BuyerEmail</dd>
+                <dt>Phone</dt>
+                <dd>@(string.IsNullOrWhiteSpace((string?)ViewBag.BuyerPhone) ? "-" : ViewBag.BuyerPhone)</dd>
                 <dt>Date</dt>
                 <dd>@Model.OrderDate.ToLocalTime().ToString("f")</dd>
                 <dt>Delivery</dt>
@@ -61,6 +63,10 @@
                 <h3 class="h6">Shipping</h3>
                 <p class="mb-0">
                     @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName<br />
+                    @if (!string.IsNullOrWhiteSpace((string?)ViewBag.BuyerPhone))
+                    {
+                        @ViewBag.BuyerPhone<br />
+                    }
                     @Model.ShippingAddress.Street<br />
                     @Model.ShippingAddress.City, @Model.ShippingAddress.Country
                 </p>

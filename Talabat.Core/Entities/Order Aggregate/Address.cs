@@ -14,13 +14,14 @@ namespace Talabat.Core.Entities.Order_Aggregate
 		{
 			
 		}
-		public Address(string firstName, string lastName, string street, string city, string country)
+		public Address(string firstName, string lastName, string street, string city, string country, string phoneNumber = "")
 		{
 			FirstName = firstName;
 			LastName = lastName;
 			Street = street;
 			City = city;
 			Country = country;
+			PhoneNumber = phoneNumber;
 		}
 
 		public string FirstName { get; set; }
@@ -28,5 +29,6 @@ namespace Talabat.Core.Entities.Order_Aggregate
 		public string Street { get; set; }
 		public string City { get; set; }
 		public string Country { get; set; }
+		public string PhoneNumber { get; set; } = string.Empty;
 	}
 }

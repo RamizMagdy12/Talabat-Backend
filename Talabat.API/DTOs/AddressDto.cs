@@ -16,5 +16,7 @@ namespace Talabat.API.DTOs
 		public string City { get; set; }
 		[Required]
 		public string Country { get; set; }
+		[MaxLength(30)]
+		public string PhoneNumber { get; set; } = string.Empty;
 	}
 }
