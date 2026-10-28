@@ -19,7 +19,8 @@ namespace Talabat.Repository.IdentityData.DataSeeding
                     DisplayName = "Ramiz Magdy",
                     Email = "Ramiz@gmail.com",
                     UserName = "Ramiz.magdy",
-                    PhoneNumber = "01226725667"
+                    PhoneNumber = "01226725667",
+                    EmailConfirmed = true
                 };
                 await _userManager.CreateAsync(user, "A@a123456");
             }

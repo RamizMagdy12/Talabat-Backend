@@ -119,7 +119,7 @@ namespace Talabat.API
                 await _identityContext.Database.MigrateAsync();
                 var _userManager = services.GetRequiredService<UserManager<AppUser>>();
                 await AppIdentityContextSeed.SeedUserAsync(_userManager);
-                
+				await ConfirmLegacyEmailsOnceAsync(app, _identityContext);
             }
             catch (Exception ex)
             {
@@ -146,5 +146,20 @@ namespace Talabat.API
 
             app.Run();
         }
+
+		/// <summary>
+		/// One-time: mark pre-existing Identity users as email-confirmed so login keeps working
+		/// after email activation is enabled. Skips on subsequent startups via a marker file.
+		/// </summary>
+		private static async Task ConfirmLegacyEmailsOnceAsync(WebApplication app, AppIdentityContext identityContext)
+		{
+			var markerPath = Path.Combine(app.Environment.ContentRootPath, ".email-activation-backfill");
+			if (File.Exists(markerPath))
+				return;
+
+			await identityContext.Database.ExecuteSqlRawAsync(
+				"UPDATE AspNetUsers SET EmailConfirmed = 1 WHERE EmailConfirmed = 0");
+			await File.WriteAllTextAsync(markerPath, DateTime.UtcNow.ToString("O"));
+		}
     }
 }
