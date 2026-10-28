@@ -48,18 +48,46 @@
                 <button type="button" class="sidebar-close" id="sidebarClose" aria-label="Close menu">&times;</button>
             </div>
             <nav class="sidebar-nav">
-                <a class="nav-link @(path.StartsWith("/Dashboard") || path == "/" ? "active" : "")" asp-controller="Dashboard" asp-action="Index">@L["admin.nav.dashboard"]</a>
-                <a class="nav-link @(path.StartsWith("/Products") ? "active" : "")" asp-controller="Products" asp-action="Index">@L["admin.nav.products"]</a>
-                <a class="nav-link @(path.StartsWith("/Inventory") ? "active" : "")" asp-controller="Inventory" asp-action="Index">@L["admin.nav.inventory"]</a>
-                <a class="nav-link @(path.StartsWith("/Brands") ? "active" : "")" asp-controller="Brands" asp-action="Index">@L["admin.nav.brands"]</a>
-                <a class="nav-link @(path.StartsWith("/Categories") ? "active" : "")" asp-controller="Categories" asp-action="Index">@L["admin.nav.categories"]</a>
-                <a class="nav-link @(path.StartsWith("/Orders") ? "active" : "")" asp-controller="Orders" asp-action="Index">@L["admin.nav.orders"]</a>
-                <a class="nav-link @(path.StartsWith("/Offers") ? "active" : "")" asp-controller="Offers" asp-action="Index">@L["admin.nav.offers"]</a>
-                <a class="nav-link @(path.StartsWith("/Accounts") ? "active" : "")" asp-controller="Accounts" asp-action="Index">@L["admin.nav.users"]</a>
-                <a class="nav-link @(path.StartsWith("/Finance") ? "active" : "")" asp-controller="Finance" asp-action="Index">@L["admin.nav.finance"]</a>
+                @if (User.HasModule(AdminPermissions.Dashboard))
+                {
+                    <a class="nav-link @(path.StartsWith("/Dashboard") || path == "/" ? "active" : "")" asp-controller="Dashboard" asp-action="Index">@L["admin.nav.dashboard"]</a>
+                }
+                @if (User.HasModule(AdminPermissions.Products))
+                {
+                    <a class="nav-link @(path.StartsWith("/Products") ? "active" : "")" asp-controller="Products" asp-action="Index">@L["admin.nav.products"]</a>
+                }
+                @if (User.HasModule(AdminPermissions.Inventory))
+                {
+                    <a class="nav-link @(path.StartsWith("/Inventory") ? "active" : "")" asp-controller="Inventory" asp-action="Index">@L["admin.nav.inventory"]</a>
+                }
+                @if (User.HasModule(AdminPermissions.Brands))
+                {
+                    <a class="nav-link @(path.StartsWith("/Brands") ? "active" : "")" asp-controller="Brands" asp-action="Index">@L["admin.nav.brands"]</a>
+                }
+                @if (User.HasModule(AdminPermissions.Categories))
+                {
+                    <a class="nav-link @(path.StartsWith("/Categories") ? "active" : "")" asp-controller="Categories" asp-action="Index">@L["admin.nav.categories"]</a>
+                }
+                @if (User.HasModule(AdminPermissions.Orders))
+                {
+                    <a class="nav-link @(path.StartsWith("/Orders") ? "active" : "")" asp-controller="Orders" asp-action="Index">@L["admin.nav.orders"]</a>
+                }
+                @if (User.HasModule(AdminPermissions.Offers))
+                {
+                    <a class="nav-link @(path.StartsWith("/Offers") ? "active" : "")" asp-controller="Offers" asp-action="Index">@L["admin.nav.offers"]</a>
+                }
+                @if (User.IsPanelAdmin())
+                {
+                    <a class="nav-link @(path.StartsWith("/Accounts") ? "active" : "")" asp-controller="Accounts" asp-action="Index">@L["admin.nav.users"]</a>
+                }
+                @if (User.HasModule(AdminPermissions.Finance))
+                {
+                    <a class="nav-link @(path.StartsWith("/Finance") ? "active" : "")" asp-controller="Finance" asp-action="Index">@L["admin.nav.finance"]</a>
+                }
+                <a class="nav-link @(path.StartsWith("/Profile") ? "active" : "")" asp-controller="Profile" asp-action="Index">@L["admin.nav.profile"]</a>
             </nav>
             <div class="sidebar-footer">
-                <div class="user-chip">@User.FindFirstValue(ClaimTypes.Email)</div>
+                <a class="user-chip" asp-controller="Profile" asp-action="Index" title="@L["admin.nav.profile"]">@User.FindFirstValue(ClaimTypes.Email)</a>
                 <form asp-controller="Account" asp-action="Logout" method="post">
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-outline-light btn-sm w-100">@L["admin.logout"]</button>

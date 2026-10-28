@@ -7,9 +7,11 @@ using Talabat.Core.Entities.Identity;
 using Talabat.Core.Entities.Order_Aggregate;
 using Talabat.Core.Services.Contract;
 
+using Talabat.Admin.Security;
+
 namespace Talabat.Admin.Controllers
 {
-	[Authorize(Roles = "Admin")]
+	[AdminPermission(AdminPermissions.Orders)]
 	public class OrdersController : Controller
 	{
 		private readonly IOrderService _orderService;

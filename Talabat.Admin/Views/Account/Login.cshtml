@@ -25,7 +25,10 @@
             </div>
             <div class="mb-3">
                 <label asp-for="Password" class="form-label">@L["admin.login.password"]</label>
-                <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                <div class="password-field">
+                    <input asp-for="Password" class="form-control" id="loginPassword" autocomplete="current-password" />
+                    <button type="button" class="password-toggle" data-target="loginPassword" aria-label="@L["admin.common.showPassword"]">👁</button>
+                </div>
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-check mb-3">
@@ -39,4 +42,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/password-toggle.js" asp-append-version="true"></script>
 }

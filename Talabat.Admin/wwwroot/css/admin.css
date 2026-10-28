@@ -812,3 +812,48 @@ html[dir="rtl"] .auth-lang {
     align-items: stretch;
   }
 }
+
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.password-field .form-control {
+  padding-inline-end: 2.75rem;
+}
+.password-toggle {
+  position: absolute;
+  inset-inline-end: .4rem;
+  border: 0;
+  background: transparent;
+  color: #64748b;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  line-height: 1;
+}
+.password-toggle:hover,
+.password-toggle.is-on {
+  color: var(--brand, #ff4d00);
+  background: rgba(255, 77, 0, .08);
+}
+.perm-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .55rem .85rem;
+  padding: .75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fafbfc;
+}
+.sidebar-footer .user-chip {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: .55rem;
+}
+.sidebar-footer a.user-chip:hover {
+  opacity: .9;
+  text-decoration: underline;
+}

@@ -7,9 +7,11 @@ using Talabat.Core;
 using Talabat.Core.Entities;
 using Talabat.Core.ProductSpec;
 
+using Talabat.Admin.Security;
+
 namespace Talabat.Admin.Controllers
 {
-	[Authorize(Roles = "Admin")]
+	[AdminPermission(AdminPermissions.Products)]
 	public class ProductsController : Controller
 	{
 		private static readonly HashSet<string> AllowedExtensions = new(StringComparer.OrdinalIgnoreCase)

@@ -6,9 +6,11 @@ using Talabat.Core;
 using Talabat.Core.Entities;
 using Talabat.Core.ProductSpec;
 
+using Talabat.Admin.Security;
+
 namespace Talabat.Admin.Controllers
 {
-	[Authorize(Roles = "Admin")]
+	[AdminPermission(AdminPermissions.Offers)]
 	public class OffersController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;

@@ -4,9 +4,11 @@ using Talabat.Admin.Localization;
 using Talabat.Core;
 using Talabat.Core.Entities;
 
+using Talabat.Admin.Security;
+
 namespace Talabat.Admin.Controllers
 {
-	[Authorize(Roles = "Admin")]
+	[AdminPermission(AdminPermissions.Brands)]
 	public class BrandsController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;

@@ -5,9 +5,11 @@ using Talabat.Admin.Models;
 using Talabat.Core.Entities.Order_Aggregate;
 using Talabat.Core.Services.Contract;
 
+using Talabat.Admin.Security;
+
 namespace Talabat.Admin.Controllers
 {
-	[Authorize(Roles = "Admin")]
+	[AdminPermission(AdminPermissions.Finance)]
 	public class FinanceController : Controller
 	{
 		private static readonly HashSet<OrderStatus> RevenueStatuses =

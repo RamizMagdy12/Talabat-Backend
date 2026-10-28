@@ -1,0 +1,75 @@
+@model ProfileViewModel
+@{
+    ViewData["Title"] = L["admin.profile.title"];
+    var change = ViewBag.ChangePassword as ChangePasswordViewModel ?? new ChangePasswordViewModel();
+    var isAr = L.IsRtl;
+}
+
+<div class="row g-3" style="max-width:960px">
+    <div class="col-lg-5">
+        <div class="panel">
+            <div class="panel-header"><h2>@L["admin.profile.info"]</h2></div>
+            <dl class="mb-0 px-1">
+                <dt>@L["admin.users.name"]</dt>
+                <dd>@Model.DisplayName</dd>
+                <dt>@L["admin.users.email"]</dt>
+                <dd>@Model.Email</dd>
+                <dt>@L["admin.users.roles"]</dt>
+                <dd><span class="badge-status badge-paid">@Model.RoleLabel</span></dd>
+                <dt>@L["admin.users.permissions"]</dt>
+                <dd>
+                    @if (User.IsPanelAdmin())
+                    {
+                        <span class="text-muted">@L["admin.users.fullAccess"]</span>
+                    }
+                    else if (!Model.Permissions.Any())
+                    {
+                        <span class="text-muted">—</span>
+                    }
+                    else
+                    {
+                        foreach (var p in Model.Permissions)
+                        {
+                            var label = AdminPermissions.All.FirstOrDefault(x => x.Key == p);
+                            <span class="badge-status badge-prep me-1 mb-1">@(isAr ? label.LabelAr : label.LabelEn)</span>
+                        }
+                    }
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="panel">
+            <div class="panel-header"><h2>@L["admin.profile.changePassword"]</h2></div>
+            <form asp-action="ChangePassword" method="post" class="px-1">
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <label class="form-label" for="CurrentPassword">@L["admin.profile.currentPassword"]</label>
+                    <div class="password-field">
+                        <input asp-for="@change.CurrentPassword" name="CurrentPassword" id="CurrentPassword" class="form-control" autocomplete="current-password" />
+                        <button type="button" class="password-toggle" data-target="CurrentPassword" aria-label="@L["admin.common.showPassword"]">👁</button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="NewPassword">@L["admin.profile.newPassword"]</label>
+                    <div class="password-field">
+                        <input asp-for="@change.NewPassword" name="NewPassword" id="NewPassword" class="form-control" autocomplete="new-password" />
+                        <button type="button" class="password-toggle" data-target="NewPassword" aria-label="@L["admin.common.showPassword"]">👁</button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="ConfirmPassword">@L["admin.profile.confirmPassword"]</label>
+                    <div class="password-field">
+                        <input asp-for="@change.ConfirmPassword" name="ConfirmPassword" id="ConfirmPassword" class="form-control" autocomplete="new-password" />
+                        <button type="button" class="password-toggle" data-target="ConfirmPassword" aria-label="@L["admin.common.showPassword"]">👁</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-brand">@L["admin.profile.updatePassword"]</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/password-toggle.js" asp-append-version="true"></script>
+}

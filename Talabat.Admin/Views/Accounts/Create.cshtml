@@ -1,0 +1,86 @@
+@model CreateStaffViewModel
+@{
+    ViewData["Title"] = L["admin.users.createTitle"];
+    var isAr = L.IsRtl;
+}
+
+<div class="panel" style="max-width:640px">
+    <div class="panel-header">
+        <div>
+            <h2>@L["admin.users.createTitle"]</h2>
+            <p class="panel-sub">@L["admin.users.createSub"]</p>
+        </div>
+    </div>
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="DisplayName" class="form-label">@L["admin.users.name"]</label>
+            <input asp-for="DisplayName" class="form-control" />
+            <span asp-validation-for="DisplayName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">@L["admin.users.email"]</label>
+            <input asp-for="Email" class="form-control" autocomplete="username" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label">@L["admin.login.password"]</label>
+            <div class="password-field">
+                <input asp-for="Password" class="form-control" id="createPassword" autocomplete="new-password" />
+                <button type="button" class="password-toggle" data-target="createPassword" aria-label="@L["admin.common.showPassword"]">👁</button>
+            </div>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ConfirmPassword" class="form-label">@L["admin.profile.confirmPassword"]</label>
+            <div class="password-field">
+                <input asp-for="ConfirmPassword" class="form-control" id="createConfirm" autocomplete="new-password" />
+                <button type="button" class="password-toggle" data-target="createConfirm" aria-label="@L["admin.common.showPassword"]">👁</button>
+            </div>
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <div class="form-check mb-3">
+            <input asp-for="IsAdmin" class="form-check-input" id="isAdminCheck" />
+            <label asp-for="IsAdmin" class="form-check-label">@L["admin.users.makeAdmin"]</label>
+            <div class="form-text">@L["admin.users.makeAdminHint"]</div>
+        </div>
+
+        <div id="permBox" class="mb-3">
+            <label class="form-label">@L["admin.users.permissions"]</label>
+            <div class="perm-grid">
+                @foreach (var p in AdminPermissions.All)
+                {
+                    <label class="form-check">
+                        <input class="form-check-input" type="checkbox" name="SelectedPermissions" value="@p.Key"
+                               @(Model.SelectedPermissions.Contains(p.Key) ? "checked" : null) />
+                        <span class="form-check-label">@(isAr ? p.LabelAr : p.LabelEn)</span>
+                    </label>
+                }
+            </div>
+            <div class="form-text">@L["admin.users.permissionsHint"]</div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-brand">@L["admin.users.createBtn"]</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">@L["admin.common.cancel"]</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/password-toggle.js" asp-append-version="true"></script>
+    <script>
+        (function () {
+            const admin = document.getElementById('isAdminCheck');
+            const box = document.getElementById('permBox');
+            const sync = () => { if (box) box.style.display = admin?.checked ? 'none' : 'block'; };
+            admin?.addEventListener('change', sync);
+            sync();
+        })();
+    </script>
+}

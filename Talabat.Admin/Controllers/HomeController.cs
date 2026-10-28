@@ -1,24 +1,24 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Talabat.Admin.Models;
+using Talabat.Admin.Security;
 
-namespace Talabat.Admin.Controllers;
-
-public class HomeController : Controller
+namespace Talabat.Admin.Controllers
 {
-    public IActionResult Index()
-    {
-        return View();
-    }
+	[Authorize]
+	[AdminPermission]
+	public class HomeController : Controller
+	{
+		public IActionResult Index() =>
+			RedirectToAction("Index", User.HomeController());
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+		[AllowAnonymous]
+		public IActionResult Privacy() => View();
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
+		[AllowAnonymous]
+		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+		public IActionResult Error() =>
+			View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+	}
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Talabat.Admin.Models;
+using Talabat.Admin.Security;
 using Talabat.Core.Entities.Identity;
 
 namespace Talabat.Admin.Controllers
@@ -40,7 +41,9 @@ namespace Talabat.Admin.Controllers
 				return View(model);
 			}
 
-			if (!await _userManager.IsInRoleAsync(user, "Admin"))
+			var isAdmin = await _userManager.IsInRoleAsync(user, AdminRoles.Admin);
+			var isStaff = await _userManager.IsInRoleAsync(user, AdminRoles.Staff);
+			if (!isAdmin && !isStaff)
 			{
 				ModelState.AddModelError(string.Empty, "You are not authorized to access the admin panel.");
 				return View(model);
@@ -56,7 +59,9 @@ namespace Talabat.Admin.Controllers
 			if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
 				return Redirect(returnUrl);
 
-			return RedirectToAction("Index", "Dashboard");
+			// Fresh principal after sign-in for home routing
+			var principal = await _signInManager.CreateUserPrincipalAsync(user);
+			return RedirectToAction("Index", principal.HomeController());
 		}
 
 		[Authorize]

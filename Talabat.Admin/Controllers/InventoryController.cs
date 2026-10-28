@@ -5,9 +5,11 @@ using Talabat.Core;
 using Talabat.Core.Entities;
 using Talabat.Core.ProductSpec;
 
+using Talabat.Admin.Security;
+
 namespace Talabat.Admin.Controllers
 {
-	[Authorize(Roles = "Admin")]
+	[AdminPermission(AdminPermissions.Inventory)]
 	public class InventoryController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;

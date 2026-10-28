@@ -105,7 +105,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
 	name: "default",
-	pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+	pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
 
@@ -113,9 +113,11 @@ public static class AdminIdentitySeed
 {
 	public static async Task SeedAsync(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
 	{
-		const string adminRole = "Admin";
-		if (!await roleManager.RoleExistsAsync(adminRole))
-			await roleManager.CreateAsync(new IdentityRole(adminRole));
+		foreach (var role in new[] { "Admin", "Staff" })
+		{
+			if (!await roleManager.RoleExistsAsync(role))
+				await roleManager.CreateAsync(new IdentityRole(role));
+		}
 
 		const string adminEmail = "admin@talabat.local";
 		var admin = await userManager.FindByEmailAsync(adminEmail);
@@ -132,7 +134,7 @@ public static class AdminIdentitySeed
 			if (!result.Succeeded) return;
 		}
 
-		if (!await userManager.IsInRoleAsync(admin, adminRole))
-			await userManager.AddToRoleAsync(admin, adminRole);
+		if (!await userManager.IsInRoleAsync(admin, "Admin"))
+			await userManager.AddToRoleAsync(admin, "Admin");
 	}
 }
