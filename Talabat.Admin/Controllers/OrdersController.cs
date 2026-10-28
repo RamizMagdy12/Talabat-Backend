@@ -37,6 +37,7 @@ namespace Talabat.Admin.Controllers
 				var term = q.Trim();
 				orders = orders.Where(o =>
 					o.Id.ToString().Contains(term, StringComparison.OrdinalIgnoreCase) ||
+					(o.OrderNumber?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false) ||
 					(o.BuyerEmail?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false) ||
 					OrderStatusHelper.DisplayName(o.Status).Contains(term, StringComparison.OrdinalIgnoreCase) ||
 					(o.PaymentIntentId?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false));

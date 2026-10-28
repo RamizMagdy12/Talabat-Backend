@@ -118,7 +118,7 @@
                 foreach (var order in Model.RecentOrders)
                 {
                     <tr>
-                        <td>@order.Id</td>
+                        <td>@(string.IsNullOrWhiteSpace(order.OrderNumber) ? $"#{order.Id}" : order.OrderNumber)</td>
                         <td>@order.BuyerEmail</td>
                         <td>@order.OrderDate.ToLocalTime().ToString("g")</td>
                         <td>

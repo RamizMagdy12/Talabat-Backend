@@ -50,6 +50,7 @@ namespace Talabat.Admin.Controllers
 				var term = q.Trim();
 				filtered = filtered.Where(o =>
 					o.Id.ToString().Contains(term, StringComparison.OrdinalIgnoreCase) ||
+					(o.OrderNumber?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false) ||
 					(o.BuyerEmail?.Contains(term, StringComparison.OrdinalIgnoreCase) ?? false) ||
 					OrderStatusHelper.DisplayName(o.Status).Contains(term, StringComparison.OrdinalIgnoreCase));
 			}
@@ -78,6 +79,7 @@ namespace Talabat.Admin.Controllers
 					.Select(o => new FinanceOrderRow
 					{
 						Id = o.Id,
+						OrderNumber = o.OrderNumber ?? string.Empty,
 						BuyerEmail = o.BuyerEmail,
 						OrderDate = o.OrderDate,
 						Status = o.Status,

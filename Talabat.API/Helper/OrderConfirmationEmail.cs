@@ -20,8 +20,8 @@ namespace Talabat.API.Helper
 			sb.Append("<div style='background:#fff;border-radius:16px;padding:28px;border:1px solid #e4e8ef'>");
 			sb.Append("<div style='width:42px;height:42px;border-radius:12px;background:linear-gradient(145deg,#ff4d00,#d93d00);color:#fff;font-weight:800;text-align:center;line-height:42px;font-size:20px'>T</div>");
 			sb.Append("<h1 style='margin:18px 0 6px;font-size:22px'>Order confirmed</h1>");
-			sb.Append("<p style='margin:0 0 18px;color:#5b6573;line-height:1.5'>Thanks for your order. Here are the details for <strong>#")
-				.Append(order.Id)
+			sb.Append("<p style='margin:0 0 18px;color:#5b6573;line-height:1.5'>Thanks for your order. Here are the details for <strong>")
+				.Append(WebUtility.HtmlEncode(order.OrderNumber))
 				.Append("</strong>.</p>");
 
 			sb.Append("<table style='width:100%;border-collapse:collapse;margin:0 0 18px;font-size:14px'>");

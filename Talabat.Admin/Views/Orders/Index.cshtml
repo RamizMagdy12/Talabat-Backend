@@ -58,7 +58,7 @@
                 foreach (var order in Model)
                 {
                     <tr>
-                        <td>@order.Id</td>
+                        <td>@(string.IsNullOrWhiteSpace(order.OrderNumber) ? $"#{order.Id}" : order.OrderNumber)</td>
                         <td>@order.BuyerEmail</td>
                         <td>@order.OrderDate.ToLocalTime().ToString("g")</td>
                         <td>@order.Items?.Count</td>

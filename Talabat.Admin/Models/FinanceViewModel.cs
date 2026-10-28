@@ -26,6 +26,7 @@ namespace Talabat.Admin.Models
 	public class FinanceOrderRow
 	{
 		public int Id { get; set; }
+		public string OrderNumber { get; set; } = string.Empty;
 		public string BuyerEmail { get; set; } = string.Empty;
 		public DateTimeOffset OrderDate { get; set; }
 		public OrderStatus Status { get; set; }

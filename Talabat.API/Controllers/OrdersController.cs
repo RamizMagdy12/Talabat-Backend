@@ -57,12 +57,12 @@ namespace Talabat.API.Controllers
 				var html = OrderConfirmationEmail.BuildHtml(order);
 				await _emailService.SendAsync(
 					order.BuyerEmail,
-					$"Talabat — order #{order.Id} confirmed",
+					$"Talabat — order {order.OrderNumber} confirmed",
 					html);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "Order #{OrderId} created but confirmation email failed", order.Id);
+				_logger.LogError(ex, "Order {OrderNumber} created but confirmation email failed", order.OrderNumber);
 			}
 
 			var mapped = _mapper.Map<Order, OrderToReturnDto>(order);

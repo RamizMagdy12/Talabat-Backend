@@ -23,7 +23,13 @@ namespace Talabat.Repository.Data.Configurations
 
 			builder.Property(o => o.Subtotal)
 				.HasColumnType("decimal(18,2)");
-					
+
+			builder.Property(o => o.OrderNumber)
+				.IsRequired()
+				.HasMaxLength(32);
+
+			builder.HasIndex(o => o.OrderNumber)
+				.IsUnique();
 		}
 	}
 }

@@ -7,6 +7,7 @@ namespace Talabat.API.DTOs
 	public class OrderToReturnDto:IMapFrom<Order>
 	{
 		public int Id { get; set; }
+		public string OrderNumber { get; set; } = string.Empty;
 		public string BuyerEmail { get; set; }
 		public DateTimeOffset OrderDate { get; set; } 
 		public OrderStatus Status { get; set; } 

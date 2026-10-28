@@ -73,7 +73,8 @@ namespace Talabat.Services
 				if (basket == null) return null;
 			}
 			//Create Order
-			var order = new Order(BuyerEmail, ShippingAddress, deliveryMethod , orderItems , subTotal,basket.PaymentIntentId);
+			var orderNumber = OrderNumberGenerator.Create();
+			var order = new Order(BuyerEmail, ShippingAddress, deliveryMethod , orderItems , subTotal, basket.PaymentIntentId, orderNumber);
 
 			if (!string.IsNullOrWhiteSpace(basket.PaymentIntentId)
 				&& await _paymentService.IsPaymentIntentSucceededAsync(basket.PaymentIntentId))
@@ -100,7 +101,7 @@ namespace Talabat.Services
 					StockAfter = product?.Stock ?? 0,
 					OccurredAtUtc = DateTime.UtcNow,
 					OrderId = order.Id,
-					Note = $"Sold on order #{order.Id}",
+					Note = $"Sold on order {order.OrderNumber}",
 					CreatedDateTime = DateTime.UtcNow
 				});
 			}

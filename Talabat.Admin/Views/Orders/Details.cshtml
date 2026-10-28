@@ -1,7 +1,7 @@
 @using Talabat.Admin.Helpers
 @model Order
 @{
-    ViewData["Title"] = L.Get("admin.orders.title", ("id", Model.Id));
+    ViewData["Title"] = L.Get("admin.orders.title", ("id", string.IsNullOrWhiteSpace(Model.OrderNumber) ? Model.Id.ToString() : Model.OrderNumber));
 }
 
 <div class="row g-3">
