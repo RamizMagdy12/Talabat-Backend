@@ -25,6 +25,74 @@ Talabat 2026 is a food / retail style store with:
 - Admin MVC dashboard (inventory ledger, orders, finance, users)
 - Shared AR/EN resource files for the store and the admin panel
 
+### Screenshots (Admin MVC)
+
+<p align="center">
+  <img src="docs/screenshots/01-admin-login.png" alt="Admin login" width="720" />
+</p>
+
+**Admin login**
+
+<p align="center">
+  <img src="docs/screenshots/02-dashboard.png" alt="Dashboard" width="720" />
+</p>
+
+**Dashboard — operations overview & order pipeline**
+
+<p align="center">
+  <img src="docs/screenshots/03-products.png" alt="Products" width="720" />
+</p>
+
+**Products**
+
+<p align="center">
+  <img src="docs/screenshots/04-inventory.png" alt="Inventory" width="720" />
+</p>
+
+**Inventory — stock ledger**
+
+<p align="center">
+  <img src="docs/screenshots/05-brands.png" alt="Brands" width="720" />
+</p>
+
+**Brands**
+
+<p align="center">
+  <img src="docs/screenshots/06-categories.png" alt="Categories" width="720" />
+</p>
+
+**Categories**
+
+<p align="center">
+  <img src="docs/screenshots/07-orders.png" alt="Orders" width="720" />
+</p>
+
+**Orders (search by `TLB-…` order number)**
+
+<p align="center">
+  <img src="docs/screenshots/08-offers.png" alt="Offers" width="720" />
+</p>
+
+**Offers**
+
+<p align="center">
+  <img src="docs/screenshots/09-users.png" alt="Users" width="720" />
+</p>
+
+**Users**
+
+<p align="center">
+  <img src="docs/screenshots/10-finance.png" alt="Finance" width="720" />
+</p>
+
+**Finance**
+
+<p align="center">
+  <img src="docs/screenshots/11-profile.png" alt="Admin profile" width="720" />
+</p>
+
+**Admin profile**
+
 ### Tech stack
 
 | Area | Technology |
@@ -247,6 +315,74 @@ Part of the Talabat e-commerce portfolio. All rights reserved.
 - دفع ببطاقة عبر Stripe (PaymentIntent + Webhook)
 - لوحة أدمن MVC (جرد المخزون، الطلبات، المالية، المستخدمون)
 - واجهة ثنائية اللغة عربي / إنجليزي للمتجر ولوحة التحكم
+
+### لقطات الشاشة (لوحة الأدمن)
+
+<p align="center">
+  <img src="docs/screenshots/01-admin-login.png" alt="تسجيل دخول الأدمن" width="720" />
+</p>
+
+**تسجيل دخول الأدمن**
+
+<p align="center">
+  <img src="docs/screenshots/02-dashboard.png" alt="لوحة التحكم" width="720" />
+</p>
+
+**لوحة التحكم — نظرة عامة وخط سير الطلبات**
+
+<p align="center">
+  <img src="docs/screenshots/03-products.png" alt="المنتجات" width="720" />
+</p>
+
+**المنتجات**
+
+<p align="center">
+  <img src="docs/screenshots/04-inventory.png" alt="الجرد" width="720" />
+</p>
+
+**الجرد — سجل المخزون**
+
+<p align="center">
+  <img src="docs/screenshots/05-brands.png" alt="العلامات" width="720" />
+</p>
+
+**العلامات**
+
+<p align="center">
+  <img src="docs/screenshots/06-categories.png" alt="التصنيفات" width="720" />
+</p>
+
+**التصنيفات**
+
+<p align="center">
+  <img src="docs/screenshots/07-orders.png" alt="الطلبات" width="720" />
+</p>
+
+**الطلبات (بحث برقم `TLB-…`)**
+
+<p align="center">
+  <img src="docs/screenshots/08-offers.png" alt="العروض" width="720" />
+</p>
+
+**العروض**
+
+<p align="center">
+  <img src="docs/screenshots/09-users.png" alt="المستخدمون" width="720" />
+</p>
+
+**المستخدمون**
+
+<p align="center">
+  <img src="docs/screenshots/10-finance.png" alt="المالية" width="720" />
+</p>
+
+**المالية**
+
+<p align="center">
+  <img src="docs/screenshots/11-profile.png" alt="ملف الأدمن" width="720" />
+</p>
+
+**ملف الأدمن**
 
 ### التقنيات
 
